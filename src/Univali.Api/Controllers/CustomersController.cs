@@ -1,4 +1,5 @@
 
+using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -11,24 +12,25 @@ namespace Univali.Api.Controllers;
 [Route("api/customers")]
 public class CustomersController : ControllerBase
 {
+    private readonly Data _data;
+    private readonly IMapper _mapper;
+    public CustomersController (Data data, IMapper mapper) {
+        _data = data ?? throw new ArgumentNullException(nameof(data));
+        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+    }
+
     [HttpGet]
     public ActionResult<IEnumerable<CustomerDto>> GetCustomers()
     {
-        var customersToReturn = Data.Instance.Customers
-            .Select(customer =>
-                new CustomerDto
-                {
-                    Id = customer.Id,
-                    Name = customer.Name,
-                    Cpf = customer.Cpf
-                });
+        var customersFromDatabase = _data.Customers;
+        var customersToReturn = _mapper.Map<IEnumerable<CustomerDto>>(customersFromDatabase);
         return Ok(customersToReturn);
     }
 
     [HttpGet("{id}", Name = "GetCustomerById")]
     public ActionResult<CustomerDto> GetCustomerById(int id)
     {
-        var customerFromDatabase = Data.Instance
+        var customerFromDatabase = _data
             .Customers.FirstOrDefault(c => c.Id == id);
 
         if (customerFromDatabase == null) return NotFound();
@@ -46,7 +48,7 @@ public class CustomersController : ControllerBase
     [HttpGet("cpf/{cpf}")]
     public ActionResult<CustomerDto> GetCustomerByCpf(string cpf)
     {
-        var customerFromDatabase = Data.Instance.Customers
+        var customerFromDatabase = _data.Customers
             .FirstOrDefault(c => c.Cpf == cpf);
 
         if (customerFromDatabase == null)
@@ -88,12 +90,12 @@ public class CustomersController : ControllerBase
 
         var customerEntity = new Customer()
         {
-            Id = Data.Instance.Customers.Max(c => c.Id) + 1,
+            Id = _data.Customers.Max(c => c.Id) + 1,
             Name = customerForCreationDto.Name,
             Cpf = customerForCreationDto.Cpf
         };
 
-        Data.Instance.Customers.Add(customerEntity);
+        _data.Customers.Add(customerEntity);
 
         var customerToReturn = new CustomerDto
         {
@@ -116,13 +118,12 @@ public class CustomersController : ControllerBase
     {
         if (id != customerForUpdateDto.Id) return BadRequest();
 
-        var customerFromDatabase = Data.Instance.Customers
+        var customerFromDatabase = _data.Customers
             .FirstOrDefault(customer => customer.Id == id);
 
         if (customerFromDatabase == null) return NotFound();
 
-        customerFromDatabase.Name = customerForUpdateDto.Name;
-        customerFromDatabase.Cpf = customerForUpdateDto.Cpf;
+        _mapper.Map(customerForUpdateDto, customerFromDatabase);
 
         return NoContent();
     }
@@ -130,12 +131,12 @@ public class CustomersController : ControllerBase
     [HttpDelete("{id}")]
     public ActionResult DeleteCustomer(int id)
     {
-        var customerFromDatabase = Data.Instance.Customers
+        var customerFromDatabase = _data.Customers
             .FirstOrDefault(customer => customer.Id == id);
 
         if (customerFromDatabase == null) return NotFound();
 
-        Data.Instance.Customers.Remove(customerFromDatabase);
+        _data.Customers.Remove(customerFromDatabase);
 
         return NoContent();
     }
@@ -144,7 +145,7 @@ public class CustomersController : ControllerBase
         [FromBody] JsonPatchDocument<CustomerForPatchDto> patchDocument,
         [FromRoute] int id)
     {
-        var customerFromDatabase = Data.Instance.Customers
+        var customerFromDatabase = _data.Customers
             .FirstOrDefault(customer => customer.Id == id);
 
         if (customerFromDatabase == null) return NotFound();
@@ -167,7 +168,7 @@ public class CustomersController : ControllerBase
     [HttpGet("with-addresses")]
     public ActionResult<IEnumerable<CustomerWithAddressesDto>> GetCustomersWithAddresses()
     {
-        var customersFromDatabase = Data.Instance.Customers;
+        var customersFromDatabase = _data.Customers;
 
         var customersToReturn = customersFromDatabase
             .Select(customer => new CustomerWithAddressesDto
@@ -190,7 +191,7 @@ public class CustomersController : ControllerBase
     [HttpGet("{id}/with-addresses", Name = "GetCustomerWithAddressesById")]
     public ActionResult<IEnumerable<CustomerWithAddressesDto>> GetCustomerWithAddressesById(int id)
     {
-        Customer? customerFromDatabase = Data.Instance.Customers.FirstOrDefault(c => c.Id == id);
+        Customer? customerFromDatabase = _data.Customers.FirstOrDefault(c => c.Id == id);
         if (customerFromDatabase == null) return NotFound();
 
         CustomerWithAddressesDto customerToReturn = new CustomerWithAddressesDto
@@ -214,10 +215,10 @@ public class CustomersController : ControllerBase
     public ActionResult<CustomerWithAddressesDto> CreateCustomerWithAddresses(
         CustomerForCreationWithAddressesDto customerForCreationWithAddressesDto)
     {
-        int idMax = Data.Instance.Customers.SelectMany(c => c.Addresses).Max(a => a.Id) + 1;
+        int idMax = _data.Customers.SelectMany(c => c.Addresses).Max(a => a.Id) + 1;
         var customerEntity = new Customer
         {
-            Id = Data.Instance.Customers.Max(c => c.Id) + 1,
+            Id = _data.Customers.Max(c => c.Id) + 1,
             Name = customerForCreationWithAddressesDto.Name,
             Cpf = customerForCreationWithAddressesDto.Cpf,
             Addresses = customerForCreationWithAddressesDto.Addresses.Select(a =>
@@ -230,7 +231,7 @@ public class CustomersController : ControllerBase
             ).ToList()
         };
 
-        Data.Instance.Customers.Add(customerEntity);
+        _data.Customers.Add(customerEntity);
 
         var customerToReturn = new CustomerWithAddressesDto
         {
@@ -260,13 +261,13 @@ public class CustomersController : ControllerBase
     {
         if (id != customerForUpdateWithAddressesDto.Id) return BadRequest();
 
-        Customer? customerFromDatabase = Data.Instance.Customers
+        Customer? customerFromDatabase = _data.Customers
             .FirstOrDefault(customer => customer.Id == id);
         if (customerFromDatabase == null) return NotFound();
 
         customerFromDatabase.Name = customerForUpdateWithAddressesDto.Name;
         customerFromDatabase.Cpf = customerForUpdateWithAddressesDto.Cpf;
-        int idMax = Data.Instance.Customers.SelectMany(c => c.Addresses).Max(a => a.Id) + 1;
+        int idMax = _data.Customers.SelectMany(c => c.Addresses).Max(a => a.Id) + 1;
         customerFromDatabase.Addresses = customerForUpdateWithAddressesDto.Addresses.Select(a =>
             new Address
             {

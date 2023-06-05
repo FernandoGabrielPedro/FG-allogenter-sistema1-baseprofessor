@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Univali.Api.Entities;
 using Univali.Api.Models;
@@ -6,12 +7,19 @@ namespace Univali.Api.Controllers;
 
 [ApiController]
 [Route("api/customers/{customerId}/addresses")]
-public class AddressController : ControllerBase
+public class AddressesController : ControllerBase
 {
+    private readonly Data _data;
+    private readonly IMapper _mapper;
+    public AddressesController (Data data, IMapper mapper) {
+        _data = data ?? throw new ArgumentNullException(nameof(data));
+        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+    }
+
     [HttpGet]
     public ActionResult<IEnumerable<AddressDto>> GetAddresses(int customerId)
     {
-        var customerFromDatabase = Data.Instance.Customers
+        var customerFromDatabase = _data.Customers
             .FirstOrDefault(customer => customer.Id == customerId);
 
         if (customerFromDatabase == null) return NotFound();
@@ -35,7 +43,7 @@ public class AddressController : ControllerBase
     [HttpGet("{addressId}", Name = "GetAddressById")]
     public ActionResult<AddressDto> GetAddressById(int customerId, int addressId)
     {
-        var addressToReturn = Data.Instance
+        var addressToReturn = _data
             .Customers.FirstOrDefault(customer => customer.Id == customerId)
             ?.Addresses.FirstOrDefault(address => address.Id == addressId);
 
@@ -44,13 +52,13 @@ public class AddressController : ControllerBase
 
     [HttpPost]
     public ActionResult<AddressDto> CreateAddress([FromRoute] int customerId, [FromBody] AddressForCreationDto addressForCreationDto) {
-        var customerFromDatabase = Data.Instance.Customers
+        var customerFromDatabase = _data.Customers
             .FirstOrDefault(customer => customer.Id == customerId);
 
         if (customerFromDatabase == null) return NotFound();
 
         Address addressEntity = new Address {
-            Id = Data.Instance.Customers.SelectMany(c => c.Addresses).Max(a => a.Id) + 1,
+            Id = _data.Customers.SelectMany(c => c.Addresses).Max(a => a.Id) + 1,
             Street = addressForCreationDto.Street,
             City = addressForCreationDto.City
         };
@@ -75,7 +83,7 @@ public class AddressController : ControllerBase
     public ActionResult<AddressDto> UpdateAddress(int customerId, int addressId, AddressForEditionDto addressForEditionDto) {
         if (addressForEditionDto.Id != addressId) return BadRequest();
 
-        Address? addressFromCustomer = Data.Instance.
+        Address? addressFromCustomer = _data.
             Customers.FirstOrDefault(customer => customer.Id == customerId)
             ?.Addresses.FirstOrDefault(address => address.Id == addressId);
         if (addressFromCustomer == null) return NotFound();
@@ -88,7 +96,7 @@ public class AddressController : ControllerBase
 
     [HttpDelete("{addressId}")]
     public ActionResult<AddressDto> DeleteAddress(int customerId, int addressId) {
-        Customer? customerFromDatabase = Data.Instance.Customers
+        Customer? customerFromDatabase = _data.Customers
             .FirstOrDefault(customer => customer.Id == customerId);
         if (customerFromDatabase == null) return NotFound();
 

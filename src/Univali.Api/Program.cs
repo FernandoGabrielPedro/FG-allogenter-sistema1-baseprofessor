@@ -1,5 +1,4 @@
-
-
+using Univali.Api;
 using Univali.Api.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.ConfigureKestrel(options => {
    options.ListenLocalhost(5000);
 });
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddSingleton<Data>();
 
 
 // Add services to the container.
