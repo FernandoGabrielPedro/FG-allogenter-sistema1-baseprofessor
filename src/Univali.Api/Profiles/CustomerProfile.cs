@@ -7,5 +7,11 @@ public class CustomerProfile : Profile {
         //1º arg: objeto de origem
         //2º arg: objeto de destino
         CreateMap<Entities.Customer, Models.CustomerDto>();
+        CreateMap<Models.CustomerForPatchDto, Entities.Customer>();
+        CreateMap<Models.CustomerForCreationDto, Entities.Customer>();
+        CreateMap<Models.CustomerForUpdateDto, Entities.Customer>();
+        CreateMap<Entities.Customer, Models.CustomerWithAddressesDto>();
+        CreateMap<Models.CustomerForCreationWithAddressesDto, Entities.Customer>();
+        CreateMap<Models.CustomerForUpdateWithAddressesDto, Entities.Customer>();
     }
 }

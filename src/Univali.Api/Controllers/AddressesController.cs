@@ -7,7 +7,7 @@ namespace Univali.Api.Controllers;
 
 [ApiController]
 [Route("api/customers/{customerId}/addresses")]
-public class AddressesController : ControllerBase
+public class AddressesController : MainController
 {
     private readonly Data _data;
     private readonly IMapper _mapper;
@@ -28,12 +28,7 @@ public class AddressesController : ControllerBase
 
         foreach (var address in customerFromDatabase.Addresses)
         {
-            addressesToReturn.Add(new AddressDto
-            {
-                Id = address.Id,
-                Street = address.Street,
-                City = address.City
-            });
+            addressesToReturn.Add(_mapper.Map<AddressDto>(address));
         }
 
         return Ok(addressesToReturn);
@@ -43,9 +38,11 @@ public class AddressesController : ControllerBase
     [HttpGet("{addressId}", Name = "GetAddressById")]
     public ActionResult<AddressDto> GetAddressById(int customerId, int addressId)
     {
-        var addressToReturn = _data
+        var addressFromDatabase = _data
             .Customers.FirstOrDefault(customer => customer.Id == customerId)
             ?.Addresses.FirstOrDefault(address => address.Id == addressId);
+        
+        AddressDto addressToReturn = _mapper.Map<AddressDto>(addressFromDatabase);
 
         return addressToReturn != null ? Ok(addressToReturn) : NotFound();
     }
@@ -57,19 +54,11 @@ public class AddressesController : ControllerBase
 
         if (customerFromDatabase == null) return NotFound();
 
-        Address addressEntity = new Address {
-            Id = _data.Customers.SelectMany(c => c.Addresses).Max(a => a.Id) + 1,
-            Street = addressForCreationDto.Street,
-            City = addressForCreationDto.City
-        };
+        Address addressEntity = _mapper.Map<Address>(addressForCreationDto);
 
         customerFromDatabase.Addresses.Add(addressEntity);
 
-        AddressDto addressToReturn = new AddressDto {
-            Id = addressEntity.Id,
-            Street = addressEntity.Street,
-            City = addressEntity.City,
-        };
+        AddressDto addressToReturn = _mapper.Map<AddressDto>(addressEntity);
 
         return CreatedAtRoute
         (
@@ -88,8 +77,7 @@ public class AddressesController : ControllerBase
             ?.Addresses.FirstOrDefault(address => address.Id == addressId);
         if (addressFromCustomer == null) return NotFound();
 
-        addressFromCustomer.Street = addressForEditionDto.Street;
-        addressFromCustomer.City = addressForEditionDto.City;
+        addressFromCustomer = _mapper.Map<Address>(addressForEditionDto);
 
         return NoContent();
     }
