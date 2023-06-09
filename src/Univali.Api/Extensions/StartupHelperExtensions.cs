@@ -20,7 +20,7 @@ internal static class StartupHelperExtensions
            }
            catch (Exception ex)
            {
-               var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
+               var logger = scope.ServiceProvider.GetRequiredService<ILogger<IStartup>>();
                logger.LogError(ex, "An error occurred while migrating the database.");
            }
        }

@@ -84,12 +84,13 @@ public class CustomersController : MainController
     {
         if (id != customerForUpdateDto.Id) return BadRequest();
 
-        var customerFromDatabase = _data.Customers
+        var customerFromDatabase = _context.Customers
             .FirstOrDefault(customer => customer.Id == id);
 
         if (customerFromDatabase == null) return NotFound();
 
         _mapper.Map(customerForUpdateDto, customerFromDatabase);
+        _context.SaveChanges();
 
         return NoContent();
     }
@@ -97,12 +98,13 @@ public class CustomersController : MainController
     [HttpDelete("{id}")]
     public ActionResult DeleteCustomer(int id)
     {
-        var customerFromDatabase = _data.Customers
+        var customerFromDatabase = _context.Customers
             .FirstOrDefault(customer => customer.Id == id);
 
         if (customerFromDatabase == null) return NotFound();
 
-        _data.Customers.Remove(customerFromDatabase);
+        _context.Customers.Remove(customerFromDatabase);
+        _context.SaveChanges();
 
         return NoContent();
     }
@@ -112,7 +114,7 @@ public class CustomersController : MainController
         [FromBody] JsonPatchDocument<CustomerForPatchDto> patchDocument,
         [FromRoute] int id)
     {
-        Customer? customerFromDatabase = _data.Customers
+        Customer? customerFromDatabase = _context.Customers
             .FirstOrDefault(customer => customer.Id == id);
 
         if (customerFromDatabase == null) return NotFound();
@@ -126,6 +128,7 @@ public class CustomersController : MainController
 
         customerFromDatabase.Name = customerToPatch.Name;
         customerFromDatabase.Cpf = customerToPatch.Cpf;
+        _context.SaveChanges();
 
         return NoContent();
 
@@ -134,7 +137,7 @@ public class CustomersController : MainController
     [HttpGet("with-addresses")]
     public ActionResult<IEnumerable<CustomerWithAddressesDto>> GetCustomersWithAddresses()
     {
-        var customersFromDatabase = _data.Customers;
+        var customersFromDatabase = _context.Customers;
 
         IEnumerable<CustomerWithAddressesDto> customersToReturn = _mapper.Map<IEnumerable<CustomerWithAddressesDto>>(customersFromDatabase);
 
@@ -144,7 +147,7 @@ public class CustomersController : MainController
     [HttpGet("{id}/with-addresses", Name = "GetCustomerWithAddressesById")]
     public ActionResult<IEnumerable<CustomerWithAddressesDto>> GetCustomerWithAddressesById(int id)
     {
-        Customer? customerFromDatabase = _data.Customers.FirstOrDefault(c => c.Id == id);
+        Customer? customerFromDatabase = _context.Customers.FirstOrDefault(c => c.Id == id);
         if (customerFromDatabase == null) return NotFound();
 
         CustomerWithAddressesDto customerToReturn = _mapper.Map<CustomerWithAddressesDto>(customerFromDatabase);
@@ -156,7 +159,7 @@ public class CustomersController : MainController
     public ActionResult<CustomerWithAddressesDto> CreateCustomerWithAddresses(
         CustomerForCreationWithAddressesDto customerForCreationWithAddressesDto)
     {
-        int idMax = _data.Customers.SelectMany(c => c.Addresses).Max(a => a.Id) + 1;
+        int idMax = _context.Customers.SelectMany(c => c.Addresses).Max(a => a.Id) + 1;
         Customer customerEntity = _mapper.Map<Customer>(customerForCreationWithAddressesDto);
         customerEntity.Addresses = customerForCreationWithAddressesDto.Addresses.Select(a => {
             Address newAddress =  _mapper.Map<Address>(a);
@@ -164,7 +167,8 @@ public class CustomersController : MainController
             return newAddress;
         }).ToList();
 
-        _data.Customers.Add(customerEntity);
+        _context.Customers.Add(customerEntity);
+        _context.SaveChanges();
 
         CustomerWithAddressesDto customerToReturn = _mapper.Map<CustomerWithAddressesDto>(customerForCreationWithAddressesDto);
 
@@ -182,18 +186,20 @@ public class CustomersController : MainController
     {
         if (id != customerForUpdateWithAddressesDto.Id) return BadRequest();
 
-        Customer? customerFromDatabase = _data.Customers
+        Customer? customerFromDatabase = _context.Customers
             .FirstOrDefault(customer => customer.Id == id);
         if (customerFromDatabase == null) return NotFound();
 
         customerFromDatabase = _mapper.Map<Customer>(customerForUpdateWithAddressesDto);
 
-        int idMax = _data.Customers.SelectMany(c => c.Addresses).Max(a => a.Id) + 1;
+        int idMax = _context.Customers.SelectMany(c => c.Addresses).Max(a => a.Id) + 1;
         customerFromDatabase.Addresses = customerForUpdateWithAddressesDto.Addresses.Select(a => {
             Address newAddress =  _mapper.Map<Address>(a);
             newAddress.Id = idMax++;
             return newAddress;
         }).ToList();
+
+        _context.SaveChanges();
 
         return NoContent();
     }
