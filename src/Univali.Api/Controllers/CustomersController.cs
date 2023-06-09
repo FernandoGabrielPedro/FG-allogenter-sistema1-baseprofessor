@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Univali.Api.DbContexts;
 using Univali.Api.Entities;
@@ -140,17 +141,21 @@ public class CustomersController : MainController
         var customersFromDatabase = _context.Customers;
 
         IEnumerable<CustomerWithAddressesDto> customersToReturn = _mapper.Map<IEnumerable<CustomerWithAddressesDto>>(customersFromDatabase);
+        foreach(CustomerWithAddressesDto c in customersToReturn) {
+            c.Addresses = _mapper.Map<ICollection<AddressDto>>(_context.Addresses.ToList().FindAll(a => a.CustomerId == c.Id));
+        }
 
         return Ok(customersToReturn);
     }
 
-    [HttpGet("{id}/with-addresses", Name = "GetCustomerWithAddressesById")]
+    [HttpGet("with-addresses/{id}", Name = "GetCustomerWithAddressesById")]
     public ActionResult<IEnumerable<CustomerWithAddressesDto>> GetCustomerWithAddressesById(int id)
     {
         Customer? customerFromDatabase = _context.Customers.FirstOrDefault(c => c.Id == id);
         if (customerFromDatabase == null) return NotFound();
 
         CustomerWithAddressesDto customerToReturn = _mapper.Map<CustomerWithAddressesDto>(customerFromDatabase);
+        customerToReturn.Addresses = _mapper.Map<ICollection<AddressDto>>(_context.Addresses.ToList().FindAll(a => a.CustomerId == customerToReturn.Id));
 
         return Ok(customerToReturn);
     }
@@ -159,18 +164,12 @@ public class CustomersController : MainController
     public ActionResult<CustomerWithAddressesDto> CreateCustomerWithAddresses(
         CustomerForCreationWithAddressesDto customerForCreationWithAddressesDto)
     {
-        int idMax = _context.Customers.SelectMany(c => c.Addresses).Max(a => a.Id) + 1;
         Customer customerEntity = _mapper.Map<Customer>(customerForCreationWithAddressesDto);
-        customerEntity.Addresses = customerForCreationWithAddressesDto.Addresses.Select(a => {
-            Address newAddress =  _mapper.Map<Address>(a);
-            newAddress.Id = idMax++;
-            return newAddress;
-        }).ToList();
 
         _context.Customers.Add(customerEntity);
         _context.SaveChanges();
 
-        CustomerWithAddressesDto customerToReturn = _mapper.Map<CustomerWithAddressesDto>(customerForCreationWithAddressesDto);
+        CustomerWithAddressesDto customerToReturn = _mapper.Map<CustomerWithAddressesDto>(customerEntity);
 
         return CreatedAtRoute
         (
@@ -180,25 +179,18 @@ public class CustomersController : MainController
         );
     }
 
-    [HttpPut("{id}/with-addresses")]
+    [HttpPut("with-addresses/{id}")]
     public ActionResult UpdateCustomerWithAddress(int id,
         CustomerForUpdateWithAddressesDto customerForUpdateWithAddressesDto)
     {
         if (id != customerForUpdateWithAddressesDto.Id) return BadRequest();
 
-        Customer? customerFromDatabase = _context.Customers
+        Customer? customerFromDatabase = _context.Customers.Include(c => c.Addresses)
             .FirstOrDefault(customer => customer.Id == id);
         if (customerFromDatabase == null) return NotFound();
 
-        customerFromDatabase = _mapper.Map<Customer>(customerForUpdateWithAddressesDto);
-
-        int idMax = _context.Customers.SelectMany(c => c.Addresses).Max(a => a.Id) + 1;
-        customerFromDatabase.Addresses = customerForUpdateWithAddressesDto.Addresses.Select(a => {
-            Address newAddress =  _mapper.Map<Address>(a);
-            newAddress.Id = idMax++;
-            return newAddress;
-        }).ToList();
-
+        var updatedCustomer = _mapper.Map<Customer>(customerForUpdateWithAddressesDto);
+        _mapper.Map(updatedCustomer, customerFromDatabase);
         _context.SaveChanges();
 
         return NoContent();

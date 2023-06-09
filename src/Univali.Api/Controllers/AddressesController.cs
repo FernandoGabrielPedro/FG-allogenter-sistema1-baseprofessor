@@ -28,10 +28,10 @@ public class AddressesController : MainController
     }
 
 
-    [HttpGet("{addressId}", Name = "GetAddressById")]
-    public ActionResult<AddressDto> GetAddressById(int addressId)
+    [HttpGet("{id}", Name = "GetAddressById")]
+    public ActionResult<AddressDto> GetAddressById(int id)
     {
-        var addressFromDatabase = _context.Addresses.FirstOrDefault(address => address.Id == addressId);
+        var addressFromDatabase = _context.Addresses.FirstOrDefault(address => address.Id == id);
         if(addressFromDatabase == null) return NotFound();
         
         AddressDto addressToReturn = _mapper.Map<AddressDto>(addressFromDatabase);
@@ -52,19 +52,20 @@ public class AddressesController : MainController
         return CreatedAtRoute
         (
             "GetAddressById",
-            new { addressId = addressToReturn.Id },
+            new { id = addressToReturn.Id },
             addressToReturn
         );
     }
 
-    [HttpPut("{addressId}")]
-    public ActionResult<AddressDto> UpdateAddress(int addressId, AddressForEditionDto addressForEditionDto) {
-        if (addressForEditionDto.Id != addressId) return BadRequest();
+    [HttpPut("{id}")]
+    public ActionResult<AddressDto> UpdateAddress(int id, AddressForEditionDto addressForEditionDto) {
+        if (addressForEditionDto.Id != id) return BadRequest();
 
-        Address? addressFromDatabase = _context.Addresses.FirstOrDefault(address => address.Id == addressId);
+        Address? addressFromDatabase = _context.Addresses.FirstOrDefault(address => address.Id == id);
         if (addressFromDatabase == null) return NotFound();
 
-        addressFromDatabase = _mapper.Map<Address>(addressForEditionDto);
+        var addressUpdated = _mapper.Map<Address>(addressForEditionDto);
+        _mapper.Map(addressUpdated, addressFromDatabase);
         _context.SaveChanges();
 
         return NoContent();
@@ -77,6 +78,7 @@ public class AddressesController : MainController
         if(addressFromDatabase == null) return NotFound();
 
         _context.Addresses.Remove(addressFromDatabase);
+        _context.SaveChanges();
 
         return NoContent();
     }
