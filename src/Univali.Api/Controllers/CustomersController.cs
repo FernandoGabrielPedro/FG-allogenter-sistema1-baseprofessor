@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using Univali.Api.DbContexts;
 using Univali.Api.Entities;
 using Univali.Api.Models;
+using Univali.Api.Repositories;
 
 namespace Univali.Api.Controllers;
 
@@ -19,16 +20,18 @@ public class CustomersController : MainController
     private readonly Data _data;
     private readonly IMapper _mapper;
     private readonly CustomerContext _context;
-    public CustomersController (Data data, IMapper mapper, CustomerContext context) {
+    private readonly ICustomerRepository _customerRepository;
+    public CustomersController (Data data, IMapper mapper, CustomerContext context, ICustomerRepository customerRepository) {
         _data = data ?? throw new ArgumentNullException(nameof(data));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _context = context ?? throw new ArgumentNullException(nameof(context));
+        _customerRepository = customerRepository ?? throw new ArgumentNullException(nameof(context));
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<CustomerDto>> GetCustomers()
+    public async Task<ActionResult<IEnumerable<CustomerDto>>> GetCustomers()
     {
-        List<Customer> customersFromDatabase = _context.Customers.OrderBy(c => c.Id).ToList();
+        IEnumerable<Customer> customersFromDatabase = await _customerRepository.GetCustomersAsync();
         IEnumerable<CustomerDto> customersToReturn = _mapper.Map<IEnumerable<CustomerDto>>(customersFromDatabase);
         return Ok(customersToReturn);
     }
@@ -36,9 +39,7 @@ public class CustomersController : MainController
     [HttpGet("{id}", Name = "GetCustomerById")]
     public ActionResult<CustomerDto> GetCustomerById(int id)
     {
-        Customer? customerFromDatabase = _context
-            .Customers.FirstOrDefault(c => c.Id == id);
-
+        Customer? customerFromDatabase = _customerRepository.GetCustomerById(id);
         if (customerFromDatabase == null) return NotFound();
 
         CustomerDto customerToReturn = _mapper.Map<CustomerDto>(customerFromDatabase);
@@ -50,9 +51,7 @@ public class CustomersController : MainController
     [HttpGet("cpf/{cpf}")]
     public ActionResult<CustomerDto> GetCustomerByCpf(string cpf)
     {
-        var customerFromDatabase = _context.Customers
-            .FirstOrDefault(c => c.Cpf == cpf);
-
+        Customer? customerFromDatabase = _customerRepository.GetCustomerByCpf(cpf);
         if (customerFromDatabase == null) return NotFound();
 
         CustomerDto customerToReturn = _mapper.Map<CustomerDto>(customerFromDatabase);
