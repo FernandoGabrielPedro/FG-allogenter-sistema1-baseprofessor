@@ -48,8 +48,10 @@ public class AddressesController : MainController
     [HttpPost]
     public async Task<ActionResult<AddressDto>> CreateAddressAsync([FromBody] AddressForCreationDto addressForCreationDto) {
         Address addressEntity = _mapper.Map<Address>(addressForCreationDto);
+        addressEntity.Id = _context.Addresses.Max(c => c.Id) + 1;
 
-        _customerRepository.CreateAddressAsync(addressEntity);
+        _customerRepository.CreateAddress(addressEntity);
+        await _customerRepository.SaveChangesAsync();
 
         AddressDto addressToReturn = _mapper.Map<AddressDto>(addressEntity);
         return CreatedAtRoute
@@ -68,7 +70,7 @@ public class AddressesController : MainController
         if (addressFromDatabase == null) return NotFound();
 
         _mapper.Map(addressForUpdateDto, addressFromDatabase);
-        _customerRepository.UpdateAddressAsync();
+        await _customerRepository.SaveChangesAsync();
 
         return NoContent();
     }
@@ -78,7 +80,8 @@ public class AddressesController : MainController
         Address? addressFromDatabase = await _customerRepository.GetAddressByIdAsync(id);
         if(addressFromDatabase == null) return NotFound();
 
-        _customerRepository.DeleteAddressAsync(addressFromDatabase);
+        _customerRepository.DeleteAddress(addressFromDatabase);
+        await _customerRepository.SaveChangesAsync();
 
         return NoContent();
     }
