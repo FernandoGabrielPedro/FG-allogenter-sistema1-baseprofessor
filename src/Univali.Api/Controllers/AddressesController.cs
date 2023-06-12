@@ -14,8 +14,8 @@ public class AddressesController : MainController
     private readonly Data _data;
     private readonly IMapper _mapper;
     private readonly CustomerContext _context;
-    private readonly CustomerRepository _customerRepository;
-    public AddressesController (Data data, IMapper mapper, CustomerContext context, CustomerRepository customerRepository) {
+    private readonly ICustomerRepository _customerRepository;
+    public AddressesController (Data data, IMapper mapper, CustomerContext context, ICustomerRepository customerRepository) {
         _data = data ?? throw new ArgumentNullException(nameof(data));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _context = context ?? throw new ArgumentNullException(nameof(context));
@@ -28,7 +28,6 @@ public class AddressesController : MainController
         IEnumerable<AddressDto> addressesToReturn = _mapper.Map<IEnumerable<AddressDto>>(addressesFromDatabase);
         return Ok(addressesToReturn);
     }
-
 
     [HttpGet("{id}", Name = "GetAddressById")]
     public async Task<ActionResult<AddressDto>> GetAddressByIdAsync(int id) {
@@ -68,7 +67,8 @@ public class AddressesController : MainController
         Address? addressFromDatabase = await _customerRepository.GetAddressByIdAsync(id);
         if (addressFromDatabase == null) return NotFound();
 
-        _customerRepository.UpdateAddressAsync(addressFromDatabase, addressForUpdateDto);
+        _mapper.Map(addressForUpdateDto, addressFromDatabase);
+        _customerRepository.UpdateAddressAsync();
 
         return NoContent();
     }

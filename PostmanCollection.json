@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "ddf8f2d0-b796-4c24-a11c-cdc8d16d243b",
+		"_postman_id": "4d40c3e1-1ded-4fcc-8c80-72892108e909",
 		"name": "AllogSistema1 - Base Professor",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "27562360"
+		"_exporter_id": "27864658"
 	},
 	"item": [
 		{
@@ -269,7 +269,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Id\":\"{Id}\",\r\n    \"Name\": \"{Name}\",\r\n    \"Cpf\": \"00000000000\",\r\n    \"Addresses\": [\r\n        {\r\n            \"Street\":\"{Street}\",\r\n            \"City\":\"{City}\"\r\n        },\r\n        {\r\n            \"Street\":\"{Street}\",\r\n            \"City\":\"{City}\"\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"Id\":\"{Id}\",\r\n    \"Name\": \"{Name}\",\r\n    \"Cpf\": \"00000000000\",\r\n    \"Addresses\": [\r\n        {\r\n            \"Id\":\"{Id}\",\r\n            \"Street\":\"{Street}\",\r\n            \"City\":\"{City}\"\r\n        },\r\n        {\r\n            \"Id\":\"{Id}\",\r\n            \"Street\":\"{Street}\",\r\n            \"City\":\"{City}\"\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -277,7 +277,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:{{port}}/api/customers/{id}/with-addresses",
+							"raw": "http://localhost:{{port}}/api/customers/with-addresses/{id}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -286,8 +286,8 @@
 							"path": [
 								"api",
 								"customers",
-								"{id}",
-								"with-addresses"
+								"with-addresses",
+								"{id}"
 							]
 						}
 					},
@@ -299,12 +299,12 @@
 			"name": "Addresses",
 			"item": [
 				{
-					"name": "Get Addresses From Customer (CustomerID)",
+					"name": "Get Addresses",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:{{port}}/api/customers/{customerId}/addresses",
+							"raw": "http://localhost:{{port}}/api/addresses",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -312,8 +312,6 @@
 							"port": "{{port}}",
 							"path": [
 								"api",
-								"customers",
-								"{customerId}",
 								"addresses"
 							]
 						}
@@ -321,12 +319,12 @@
 					"response": []
 				},
 				{
-					"name": "Get Address From Customer (CustomerID, AddressID)",
+					"name": "Get Addresses (CustomerID)",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:{{port}}/api/customers/{customerId}/addresses/{addressId}",
+							"raw": "http://localhost:{{port}}/api/addresses/customerId/{{customerId}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -334,23 +332,43 @@
 							"port": "{{port}}",
 							"path": [
 								"api",
-								"customers",
-								"{customerId}",
 								"addresses",
-								"{addressId}"
+								"customerId",
+								"{{customerId}}"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Post Address Into Customer (CustomerID)",
+					"name": "Get Address (ID)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{port}}/api/addresses/{id}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"addresses",
+								"{id}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post Address",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Street\":\"{Street}\",\r\n    \"City\":\"{City}\"\r\n}",
+							"raw": "{\r\n    \"Street\":\"{Street}\",\r\n    \"City\":\"{City}\",\r\n    \"CustomerId\":\"{CustomerId}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -358,7 +376,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:{{port}}/api/customers/{customerId}/addresses",
+							"raw": "http://localhost:{{port}}/api/addresses",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -366,8 +384,6 @@
 							"port": "{{port}}",
 							"path": [
 								"api",
-								"customers",
-								"{customerId}",
 								"addresses"
 							]
 						}
@@ -375,13 +391,13 @@
 					"response": []
 				},
 				{
-					"name": "Put Address From Customer (CustomerID, AddressID)",
+					"name": "Put Address (ID)",
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Id\":\"{Id}\",\r\n    \"Street\":\"{Street}\",\r\n    \"City\":\"{City}\"\r\n}",
+							"raw": "{\r\n    \"Id\":\"{Id}\",\r\n    \"Street\":\"{Street}\",\r\n    \"City\":\"{City}\",\r\n    \"CustomerId\":\"{CustomerId}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -389,7 +405,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:{{port}}/api/customers/{customerId}/addresses/{addressId}",
+							"raw": "http://localhost:{{port}}/api/addresses/{id}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -397,22 +413,20 @@
 							"port": "{{port}}",
 							"path": [
 								"api",
-								"customers",
-								"{customerId}",
 								"addresses",
-								"{addressId}"
+								"{id}"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Delete Address From Customer (CustomerID, AddressID)",
+					"name": "Delete Address (ID)",
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:{{port}}/api/customers/{customerId}/addresses/{addressId}",
+							"raw": "http://localhost:{{port}}/api/addresses/{addressId}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -420,8 +434,6 @@
 							"port": "{{port}}",
 							"path": [
 								"api",
-								"customers",
-								"{customerId}",
 								"addresses",
 								"{addressId}"
 							]

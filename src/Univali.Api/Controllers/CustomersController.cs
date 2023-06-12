@@ -25,7 +25,7 @@ public class CustomersController : MainController
         _data = data ?? throw new ArgumentNullException(nameof(data));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _context = context ?? throw new ArgumentNullException(nameof(context));
-        _customerRepository = customerRepository ?? throw new ArgumentNullException(nameof(context));
+        _customerRepository = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
     }
 
     [HttpGet]
@@ -82,7 +82,8 @@ public class CustomersController : MainController
         Customer? customerFromDatabase = await _customerRepository.GetCustomerByIdAsync(id);
         if (customerFromDatabase == null) return NotFound();
 
-        _customerRepository.UpdateCustomerAsync(customerFromDatabase, customerForUpdateDto);
+        _mapper.Map(customerForUpdateDto, customerFromDatabase);
+        _customerRepository.UpdateCustomerAsync();
 
         return NoContent();
     }
@@ -126,26 +127,26 @@ public class CustomersController : MainController
     //Arrumar Async With-Addresses
 
     [HttpGet("with-addresses")]
-    public async Task<ActionResult<IEnumerable<CustomerWithAddressesDto>>> GetCustomersWithAddresses()
+    public async Task<ActionResult<IEnumerable<CustomerWithAddressesDto>>> GetCustomersWithAddressesAsync()
     {
-        IEnumerable<Customer> customersFromDatabase = await _customerRepository.GetCustomersAsync();
+        IEnumerable<Customer> customersFromDatabase = await _customerRepository.GetCustomersWithAddressesAsync();
 
         IEnumerable<CustomerWithAddressesDto> customersToReturn = _mapper.Map<IEnumerable<CustomerWithAddressesDto>>(customersFromDatabase);
         foreach(CustomerWithAddressesDto c in customersToReturn) {
-            c.Addresses = _mapper.Map<ICollection<AddressDto>>(_customerRepository.GetAddressesByCustomerIdAsync(c.Id));
+            c.Addresses = _mapper.Map<ICollection<AddressDto>>(_customerRepository.GetAddressesByCustomerIdAsync(c.Id).Result);
         }
 
         return Ok(customersToReturn);
     }
 
     [HttpGet("with-addresses/{id}", Name = "GetCustomerWithAddressesById")]
-    public async Task<ActionResult<IEnumerable<CustomerWithAddressesDto>>> GetCustomerWithAddressesById(int id)
+    public async Task<ActionResult<IEnumerable<CustomerWithAddressesDto>>> GetCustomerWithAddressesByIdAsync(int id)
     {
         Customer? customerFromDatabase = await _customerRepository.GetCustomerByIdAsync(id);
         if (customerFromDatabase == null) return NotFound();
 
         CustomerWithAddressesDto customerToReturn = _mapper.Map<CustomerWithAddressesDto>(customerFromDatabase);
-        customerToReturn.Addresses = _mapper.Map<ICollection<AddressDto>>(_customerRepository.GetAddressesByCustomerIdAsync(id));
+        customerToReturn.Addresses = _mapper.Map<ICollection<AddressDto>>(_customerRepository.GetAddressesByCustomerIdAsync(id).Result);
 
         return Ok(customerToReturn);
     }

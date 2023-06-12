@@ -8,11 +8,9 @@ namespace Univali.Api.Repositories;
 
 public class CustomerRepository : ICustomerRepository {
     private readonly CustomerContext _context;
-    private readonly IMapper _mapper;
 
-    public CustomerRepository(CustomerContext customerContext, IMapper mapper) {
+    public CustomerRepository(CustomerContext customerContext) {
         _context = customerContext ?? throw new ArgumentNullException(nameof(customerContext));
-        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
 
@@ -37,14 +35,13 @@ public class CustomerRepository : ICustomerRepository {
         await _context.SaveChangesAsync();
     }
 
-    public async void UpdateCustomerAsync(Customer customerFromDatabase, CustomerForUpdateDto customerForUpdateDto) {
-        _mapper.Map(customerForUpdateDto, customerFromDatabase);
-        await _context.SaveChangesAsync();
+    public async void UpdateCustomerAsync() {
+        _context.SaveChangesAsync();
     }
 
     public async void DeleteCustomerAsync(Customer customerFromDatabase) {
         _context.Customers.Remove(customerFromDatabase);
-        await _context.SaveChangesAsync();
+        _context.SaveChangesAsync();
     }
 
     public async void PartiallyUpdateCustomerAsync()
@@ -55,12 +52,12 @@ public class CustomerRepository : ICustomerRepository {
 
 
     public async Task<IEnumerable<Address>> GetAddressesAsync() {
-        return await _context.Addresses.OrderBy(c => c.Id).ToListAsync();
+        return await _context.Addresses.OrderBy(a => a.Id).ToListAsync();
     }
 
     public async Task<Address?> GetAddressByIdAsync(int id) {
         IEnumerable<Address> addressList = await _context.Addresses.ToListAsync();
-        return addressList.FirstOrDefault(c => c.Id == id);
+        return addressList.FirstOrDefault(a => a.Id == id);
     }
 
     public async Task<IEnumerable<Address>> GetAddressesByCustomerIdAsync(int customerId) {
@@ -73,12 +70,16 @@ public class CustomerRepository : ICustomerRepository {
         await _context.Addresses.AddAsync(addressEntity);
         await _context.SaveChangesAsync();
     }
-    public async void UpdateAddressAsync(Address addressFromDatabase, AddressForUpdateDto addressForUpdateDto) {
-        _mapper.Map(addressForUpdateDto, addressFromDatabase);
-        await _context.SaveChangesAsync();
+    public async void UpdateAddressAsync() {
+        _context.SaveChangesAsync();
     }
     public async void DeleteAddressAsync(Address addressFromDatabase) {
         _context.Addresses.Remove(addressFromDatabase);
-        await _context.SaveChangesAsync();
+        _context.SaveChangesAsync();
+    }
+
+
+    public async Task<IEnumerable<Customer>> GetCustomersWithAddressesAsync() {
+        return await _context.Customers.Include(c => c.Addresses).OrderBy(c => c.Id).ToListAsync();
     }
 }

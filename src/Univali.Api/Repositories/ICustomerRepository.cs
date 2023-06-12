@@ -8,7 +8,7 @@ public interface ICustomerRepository {
     Task<Customer?> GetCustomerByIdAsync(int id);
     Task<Customer?> GetCustomerByCpfAsync(string cpf);
     void CreateCustomerAsync(Customer customerEntity);
-    void UpdateCustomerAsync(Customer customerFromDatabase, CustomerForUpdateDto customerForUpdateDto);
+    void UpdateCustomerAsync();
     void DeleteCustomerAsync(Customer customerFromDatabase);
     void PartiallyUpdateCustomerAsync();
     
@@ -16,6 +16,8 @@ public interface ICustomerRepository {
     Task<Address?> GetAddressByIdAsync(int id);
     Task<IEnumerable<Address>> GetAddressesByCustomerIdAsync(int customerId);
     void CreateAddressAsync(Address addressEntity);
-    void UpdateAddressAsync(Address addressFromDatabase, AddressForUpdateDto addressForUpdateDto);
+    void UpdateAddressAsync();
     void DeleteAddressAsync(Address addressFromDatabase);
+
+    Task<IEnumerable<Customer>> GetCustomersWithAddressesAsync();
 }
