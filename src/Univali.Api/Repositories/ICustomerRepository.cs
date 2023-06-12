@@ -5,17 +5,17 @@ namespace Univali.Api.Repositories;
 
 public interface ICustomerRepository {
     Task<IEnumerable<Customer>> GetCustomersAsync();
-    Customer? GetCustomerById(int id);
-    Customer? GetCustomerByCpf(string cpf);
-    void CreateCustomer(Customer customerEntity);
-    void UpdateCustomer(Customer customerFromDatabase, CustomerForUpdateDto customerForUpdateDto);
-    void DeleteCustomer(Customer customerFromDatabase);
-    void PartiallyUpdateCustomer();
+    Task<Customer?> GetCustomerByIdAsync(int id);
+    Task<Customer?> GetCustomerByCpfAsync(string cpf);
+    void CreateCustomerAsync(Customer customerEntity);
+    void UpdateCustomerAsync(Customer customerFromDatabase, CustomerForUpdateDto customerForUpdateDto);
+    void DeleteCustomerAsync(Customer customerFromDatabase);
+    void PartiallyUpdateCustomerAsync();
     
     Task<IEnumerable<Address>> GetAddressesAsync();
-    Address? GetAddressById(int id);
+    Task<Address?> GetAddressByIdAsync(int id);
     Task<IEnumerable<Address>> GetAddressesByCustomerIdAsync(int customerId);
-    void CreateAddress(Address addressEntity);
-    void UpdateAddress(Address addressFromDatabase, AddressForUpdateDto addressForUpdateDto);
-    void DeleteAddress(Address addressFromDatabase);
+    void CreateAddressAsync(Address addressEntity);
+    void UpdateAddressAsync(Address addressFromDatabase, AddressForUpdateDto addressForUpdateDto);
+    void DeleteAddressAsync(Address addressFromDatabase);
 }
