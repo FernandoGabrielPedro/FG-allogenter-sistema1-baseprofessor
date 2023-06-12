@@ -1,6 +1,6 @@
 namespace Univali.Api.Models;
 
-public class AddressForEditionDto
+public class AddressForUpdateDto
 {
     public int Id {get; set;}
     public string Street { get; set; } = string.Empty;

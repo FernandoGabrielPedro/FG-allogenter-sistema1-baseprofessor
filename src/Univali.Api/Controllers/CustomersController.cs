@@ -63,13 +63,9 @@ public class CustomersController : MainController
     public ActionResult<CustomerDto> CreateCustomer(CustomerForCreationDto customerForCreationDto) {
 
         Customer customerEntity = _mapper.Map<Customer>(customerForCreationDto);
-        customerEntity.Id = _context.Customers.Max(c => c.Id) + 1;
-
-        _context.Customers.Add(customerEntity);
-        _context.SaveChanges();
+        _customerRepository.CreateCustomer(customerEntity);
 
         CustomerDto customerToReturn = _mapper.Map<CustomerDto>(customerEntity);
-
         return CreatedAtRoute
         (
             "GetCustomerById",
@@ -79,18 +75,14 @@ public class CustomersController : MainController
     }
 
     [HttpPut("{id}")]
-    public ActionResult UpdateCustomer(int id,
-        CustomerForUpdateDto customerForUpdateDto)
+    public ActionResult UpdateCustomer(int id, CustomerForUpdateDto customerForUpdateDto)
     {
         if (id != customerForUpdateDto.Id) return BadRequest();
 
-        var customerFromDatabase = _context.Customers
-            .FirstOrDefault(customer => customer.Id == id);
-
+        Customer? customerFromDatabase = _customerRepository.GetCustomerById(id);
         if (customerFromDatabase == null) return NotFound();
 
-        _mapper.Map(customerForUpdateDto, customerFromDatabase);
-        _context.SaveChanges();
+        _customerRepository.UpdateCustomer(customerFromDatabase, customerForUpdateDto);
 
         return NoContent();
     }
@@ -98,13 +90,10 @@ public class CustomersController : MainController
     [HttpDelete("{id}")]
     public ActionResult DeleteCustomer(int id)
     {
-        var customerFromDatabase = _context.Customers
-            .FirstOrDefault(customer => customer.Id == id);
-
+        Customer? customerFromDatabase = _customerRepository.GetCustomerById(id);
         if (customerFromDatabase == null) return NotFound();
 
-        _context.Customers.Remove(customerFromDatabase);
-        _context.SaveChanges();
+        _customerRepository.DeleteCustomer(customerFromDatabase);
 
         return NoContent();
     }
