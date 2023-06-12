@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Univali.Api.DbContexts;
 using Univali.Api.Entities;
+using Univali.Api.Features.Customers.Commands.CreateCustomer;
+using Univali.Api.Features.Customers.Queries.GetCustomerDetail;
 using Univali.Api.Models;
 using Univali.Api.Repositories;
 
@@ -37,12 +39,12 @@ public class CustomersController : MainController
     }
 
     [HttpGet("{id}", Name = "GetCustomerById")]
-    public async Task<ActionResult<CustomerDto>> GetCustomerByIdAsync(int id)
+    public async Task<ActionResult<CustomerDto>> GetCustomerByIdAsync([FromServices] IGetCustomerDetailQueryHandler handler, int id)
     {
-        Customer? customerFromDatabase = await _customerRepository.GetCustomerByIdAsync(id);
-        if (customerFromDatabase == null) return NotFound();
+        GetCustomerDetailQuerie getCustomerDetailQuery = new GetCustomerDetailQuerie {Id = id};
+        var customerToReturn = await handler.Handle(getCustomerDetailQuery);
 
-        CustomerDto customerToReturn = _mapper.Map<CustomerDto>(customerFromDatabase);
+        if (customerToReturn == null) return NotFound();
 
         return Ok(customerToReturn);
     }
@@ -60,12 +62,10 @@ public class CustomersController : MainController
     }
 
     [HttpPost]
-    public async Task<ActionResult<CustomerDto>> CreateCustomerAsync(CustomerForCreationDto customerForCreationDto) {
+    public async Task<ActionResult<CustomerDto>> CreateCustomerAsync([FromServices] ICreateCustomerCommandHandler handler, CreateCustomerCommand createCustomerCommand) {
 
-        Customer customerEntity = _mapper.Map<Customer>(customerForCreationDto);
-        _customerRepository.CreateCustomerAsync(customerEntity);
-
-        CustomerDto customerToReturn = _mapper.Map<CustomerDto>(customerEntity);
+        var customerToReturn = await handler.Handle(createCustomerCommand);
+        
         return CreatedAtRoute
         (
             "GetCustomerById",
@@ -83,7 +83,7 @@ public class CustomersController : MainController
         if (customerFromDatabase == null) return NotFound();
 
         _mapper.Map(customerForUpdateDto, customerFromDatabase);
-        _customerRepository.UpdateCustomerAsync();
+        await _customerRepository.SaveChangesAsync();
 
         return NoContent();
     }
@@ -94,7 +94,8 @@ public class CustomersController : MainController
         Customer? customerFromDatabase = await _customerRepository.GetCustomerByIdAsync(id);
         if (customerFromDatabase == null) return NotFound();
 
-        _customerRepository.DeleteCustomerAsync(customerFromDatabase);
+        _customerRepository.DeleteCustomer(customerFromDatabase);
+        _customerRepository.SaveChangesAsync();
 
         return NoContent();
     }
@@ -157,7 +158,8 @@ public class CustomersController : MainController
     {
         Customer customerEntity = _mapper.Map<Customer>(customerForCreationWithAddressesDto);
 
-        _customerRepository.CreateCustomerAsync(customerEntity);
+        _customerRepository.CreateCustomer(customerEntity);
+        await _customerRepository.SaveChangesAsync();
 
         CustomerWithAddressesDto customerToReturn = _mapper.Map<CustomerWithAddressesDto>(customerEntity);
 
@@ -169,12 +171,11 @@ public class CustomersController : MainController
         );
     }
 
+    //ARRUMAR
     [HttpPut("with-addresses/{id}")]
     public async Task<ActionResult> UpdateCustomerWithAddress(int id,
         CustomerForUpdateWithAddressesDto customerForUpdateWithAddressesDto)
     {
-        //Arrumar Async
-
         if (id != customerForUpdateWithAddressesDto.Id) return BadRequest();
 
         Customer? customerFromDatabase = _context.Customers.Include(c => c.Addresses)
@@ -183,7 +184,7 @@ public class CustomersController : MainController
 
         var updatedCustomer = _mapper.Map<Customer>(customerForUpdateWithAddressesDto);
         _mapper.Map(updatedCustomer, customerFromDatabase);
-        _context.SaveChanges();
+        await _customerRepository.SaveChangesAsync();
 
         return NoContent();
     }

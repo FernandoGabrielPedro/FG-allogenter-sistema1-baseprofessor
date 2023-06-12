@@ -15,6 +15,12 @@ public class CustomerRepository : ICustomerRepository {
 
 
 
+    public async Task<bool> SaveChangesAsync() {
+        return (await _context.SaveChangesAsync() > 0);
+    }
+
+
+
     public async Task<IEnumerable<Customer>> GetCustomersAsync() {
         return await _context.Customers.OrderBy(c => c.Id).ToListAsync();
     }
@@ -29,19 +35,12 @@ public class CustomerRepository : ICustomerRepository {
         return customersList.FirstOrDefault(c => c.Cpf == cpf);
     }
 
-    public async void CreateCustomerAsync(Customer customerEntity) {
-        customerEntity.Id = _context.Customers.Max(c => c.Id) + 1;
-        await _context.Customers.AddAsync(customerEntity);
-        await _context.SaveChangesAsync();
+    public void CreateCustomer(Customer customerEntity) {
+        _context.Customers.Add(customerEntity);
     }
 
-    public async void UpdateCustomerAsync() {
-        _context.SaveChangesAsync();
-    }
-
-    public async void DeleteCustomerAsync(Customer customerFromDatabase) {
+    public void DeleteCustomer(Customer customerFromDatabase) {
         _context.Customers.Remove(customerFromDatabase);
-        _context.SaveChangesAsync();
     }
 
     public async void PartiallyUpdateCustomerAsync()
@@ -65,17 +64,11 @@ public class CustomerRepository : ICustomerRepository {
         return addressList.ToList().FindAll(a => a.CustomerId == customerId).OrderBy(c => c.Id);
     }
 
-    public async void CreateAddressAsync(Address addressEntity) {
-        addressEntity.Id = _context.Addresses.Max(c => c.Id) + 1;
-        await _context.Addresses.AddAsync(addressEntity);
-        await _context.SaveChangesAsync();
+    public void CreateAddress(Address addressEntity) {
+        _context.Addresses.AddAsync(addressEntity);
     }
-    public async void UpdateAddressAsync() {
-        _context.SaveChangesAsync();
-    }
-    public async void DeleteAddressAsync(Address addressFromDatabase) {
+    public void DeleteAddress(Address addressFromDatabase) {
         _context.Addresses.Remove(addressFromDatabase);
-        _context.SaveChangesAsync();
     }
 
 
