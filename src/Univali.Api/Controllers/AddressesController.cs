@@ -14,8 +14,8 @@ public class AddressesController : MainController
     private readonly Data _data;
     private readonly IMapper _mapper;
     private readonly CustomerContext _context;
-    private readonly CustomerRepository _customerRepository;
-    public AddressesController (Data data, IMapper mapper, CustomerContext context, CustomerRepository customerRepository) {
+    private readonly ICustomerRepository _customerRepository;
+    public AddressesController (Data data, IMapper mapper, CustomerContext context, ICustomerRepository customerRepository) {
         _data = data ?? throw new ArgumentNullException(nameof(data));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _context = context ?? throw new ArgumentNullException(nameof(context));
@@ -29,10 +29,9 @@ public class AddressesController : MainController
         return Ok(addressesToReturn);
     }
 
-
     [HttpGet("{id}", Name = "GetAddressById")]
-    public ActionResult<AddressDto> GetAddressById(int id) {
-        Address? addressFromDatabase = _customerRepository.GetAddressById(id);
+    public async Task<ActionResult<AddressDto>> GetAddressByIdAsync(int id) {
+        Address? addressFromDatabase = await _customerRepository.GetAddressByIdAsync(id);
         if(addressFromDatabase == null) return NotFound();
         
         AddressDto addressToReturn = _mapper.Map<AddressDto>(addressFromDatabase);
@@ -47,10 +46,10 @@ public class AddressesController : MainController
     }
 
     [HttpPost]
-    public ActionResult<AddressDto> CreateAddress([FromBody] AddressForCreationDto addressForCreationDto) {
+    public async Task<ActionResult<AddressDto>> CreateAddressAsync([FromBody] AddressForCreationDto addressForCreationDto) {
         Address addressEntity = _mapper.Map<Address>(addressForCreationDto);
 
-        _customerRepository.CreateAddress(addressEntity);
+        _customerRepository.CreateAddressAsync(addressEntity);
 
         AddressDto addressToReturn = _mapper.Map<AddressDto>(addressEntity);
         return CreatedAtRoute
@@ -62,23 +61,24 @@ public class AddressesController : MainController
     }
 
     [HttpPut("{id}")]
-    public ActionResult<AddressDto> UpdateAddress(int id, AddressForUpdateDto addressForUpdateDto) {
+    public async Task<ActionResult<AddressDto>> UpdateAddressAsync(int id, AddressForUpdateDto addressForUpdateDto) {
         if (addressForUpdateDto.Id != id) return BadRequest();
 
-        Address? addressFromDatabase = _customerRepository.GetAddressById(id);
+        Address? addressFromDatabase = await _customerRepository.GetAddressByIdAsync(id);
         if (addressFromDatabase == null) return NotFound();
 
-        _customerRepository.UpdateAddress(addressFromDatabase, addressForUpdateDto);
+        _mapper.Map(addressForUpdateDto, addressFromDatabase);
+        _customerRepository.UpdateAddressAsync();
 
         return NoContent();
     }
 
     [HttpDelete("{id}")]
-    public ActionResult<AddressDto> DeleteAddress(int id) {
-        Address? addressFromDatabase = _customerRepository.GetAddressById(id);
+    public async Task<ActionResult<AddressDto>> DeleteAddressAsync(int id) {
+        Address? addressFromDatabase = await _customerRepository.GetAddressByIdAsync(id);
         if(addressFromDatabase == null) return NotFound();
 
-        _customerRepository.DeleteAddress(addressFromDatabase);
+        _customerRepository.DeleteAddressAsync(addressFromDatabase);
 
         return NoContent();
     }
