@@ -21,13 +21,14 @@ builder.WebHost.ConfigureKestrel(options => {
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddSingleton<Data>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
-builder.Services.AddTransient<IGetCustomersDetailQueryHandler, GetCustomersDetailQuerieHandler>();
-builder.Services.AddTransient<IGetCustomerDetailQueryHandler, GetCustomerDetailQuerieHandler>();
-builder.Services.AddTransient<IGetCustomerDetailByCpfQueryHandler, GetCustomerDetailByCpfQuerieHandler>();
-builder.Services.AddTransient<ICreateCustomerCommandHandler, CreateCustomerCommandHandler>();
-builder.Services.AddTransient<IUpdateCustomerCommandHandler, UpdateCustomerCommandHandler>();
-builder.Services.AddTransient<IDeleteCustomerCommandHandler, DeleteCustomerCommandHandler>();
+//builder.Services.AddTransient<IGetCustomersDetailQueryHandler, GetCustomersDetailQueryHandler>();
+//builder.Services.AddTransient<IGetCustomerDetailQueryHandler, GetCustomerDetailQueryHandler>();
+//builder.Services.AddTransient<IGetCustomerDetailByCpfQueryHandler, GetCustomerDetailByCpfQueryHandler>();
+//builder.Services.AddTransient<ICreateCustomerCommandHandler, CreateCustomerCommandHandler>();
+//builder.Services.AddTransient<IUpdateCustomerCommandHandler, UpdateCustomerCommandHandler>();
+//builder.Services.AddTransient<IDeleteCustomerCommandHandler, DeleteCustomerCommandHandler>();
 
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 builder.Services.AddDbContext<CustomerContext>(options => options.UseNpgsql("Host=localhost;Database=Univali;Username=postgres;Password=123456"));
 
 // Add services to the container.

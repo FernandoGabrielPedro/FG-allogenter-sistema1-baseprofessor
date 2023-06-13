@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using MediatR;
 using Univali.Api.ValidationAttributes;
 
 namespace Univali.Api.Features.Customers.Commands.UpdateCustomer;
 
-public class UpdateCustomerCommand
+public class UpdateCustomerCommand : IRequest<bool>
 {
     [Required(ErrorMessage = "You should fill out an Id")]
     public int Id {get; set;}

@@ -1,5 +1,6 @@
 
 using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -27,27 +28,29 @@ public class CustomersController : MainController
     private readonly IMapper _mapper;
     private readonly CustomerContext _context;
     private readonly ICustomerRepository _customerRepository;
-    public CustomersController (Data data, IMapper mapper, CustomerContext context, ICustomerRepository customerRepository) {
+    private readonly IMediator _mediator;
+    public CustomersController (Data data, IMapper mapper, CustomerContext context, ICustomerRepository customerRepository, IMediator mediator) {
         _data = data ?? throw new ArgumentNullException(nameof(data));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _context = context ?? throw new ArgumentNullException(nameof(context));
         _customerRepository = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
+        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<CustomerDto>>> GetCustomersAsync([FromServices] IGetCustomersDetailQueryHandler handler)
+    public async Task<ActionResult<IEnumerable<CustomerDto>>> GetCustomersAsync()
     {
-        GetCustomersDetailQuerie getCustomersDetailQuerie = new GetCustomersDetailQuerie();
-        IEnumerable<GetCustomersDetailDto?> customersToReturn = await handler.Handle(getCustomersDetailQuerie);
+        GetCustomersDetailQuery getCustomersDetailQuery = new GetCustomersDetailQuery();
+        IEnumerable<GetCustomersDetailDto?> customersToReturn = await _mediator.Send(getCustomersDetailQuery);
 
         return Ok(customersToReturn);
     }
 
     [HttpGet("{id}", Name = "GetCustomerById")]
-    public async Task<ActionResult<CustomerDto>> GetCustomerByIdAsync([FromServices] IGetCustomerDetailQueryHandler handler, int id)
+    public async Task<ActionResult<CustomerDto>> GetCustomerByIdAsync(int id)
     {
-        GetCustomerDetailQuerie getCustomerDetailQuery = new GetCustomerDetailQuerie {Id = id};
-        GetCustomerDetailDto? customerToReturn = await handler.Handle(getCustomerDetailQuery);
+        GetCustomerDetailQuery getCustomerDetailQuery = new GetCustomerDetailQuery {Id = id};
+        GetCustomerDetailDto? customerToReturn = await _mediator.Send(getCustomerDetailQuery);
 
         if (customerToReturn == null) return NotFound();
 
@@ -56,10 +59,10 @@ public class CustomersController : MainController
 
 
     [HttpGet("cpf/{cpf}")]
-    public async Task<ActionResult<CustomerDto>> GetCustomerByCpfAsync([FromServices] IGetCustomerDetailByCpfQueryHandler handler, string cpf)
+    public async Task<ActionResult<CustomerDto>> GetCustomerByCpfAsync(string cpf)
     {
-        GetCustomerDetailByCpfQuerie getCustomerDetailByCpfQuery = new GetCustomerDetailByCpfQuerie {Cpf = cpf};
-        GetCustomerDetailByCpfDto? customerToReturn = await handler.Handle(getCustomerDetailByCpfQuery);
+        GetCustomerDetailByCpfQuery getCustomerDetailByCpfQuery = new GetCustomerDetailByCpfQuery {Cpf = cpf};
+        GetCustomerDetailByCpfDto? customerToReturn = await _mediator.Send(getCustomerDetailByCpfQuery);
 
         if (customerToReturn == null) return NotFound();
 
@@ -67,9 +70,9 @@ public class CustomersController : MainController
     }
 
     [HttpPost]
-    public async Task<ActionResult<CustomerDto>> CreateCustomerAsync([FromServices] ICreateCustomerCommandHandler handler, CreateCustomerCommand createCustomerCommand) {
+    public async Task<ActionResult<CustomerDto>> CreateCustomerAsync(CreateCustomerCommand createCustomerCommand) {
 
-        CreateCustomerDto? customerToReturn = await handler.Handle(createCustomerCommand);
+        CreateCustomerDto? customerToReturn = await _mediator.Send(createCustomerCommand);
         
         return CreatedAtRoute
         (
@@ -80,21 +83,21 @@ public class CustomersController : MainController
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateCustomerAsync([FromServices] IUpdateCustomerCommandHandler handler, UpdateCustomerCommand updateCustomerCommand, int id)
+    public async Task<ActionResult> UpdateCustomerAsync(UpdateCustomerCommand updateCustomerCommand, int id)
     {
         if (id != updateCustomerCommand.Id) return BadRequest();
 
-        bool result = await handler.Handle(updateCustomerCommand, id);
+        bool result = await _mediator.Send(updateCustomerCommand);
         if(!result) return NotFound();
 
         return NoContent();
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteCustomerAsync([FromServices] IDeleteCustomerCommandHandler handler, int id)
+    public async Task<ActionResult> DeleteCustomerAsync(int id)
     {
         DeleteCustomerCommand deleteCustomerCommand = new DeleteCustomerCommand {Id = id};
-        bool result = await handler.Handle(deleteCustomerCommand);
+        bool result = await _mediator.Send(deleteCustomerCommand);
         if(!result) return NotFound();
 
         return NoContent();

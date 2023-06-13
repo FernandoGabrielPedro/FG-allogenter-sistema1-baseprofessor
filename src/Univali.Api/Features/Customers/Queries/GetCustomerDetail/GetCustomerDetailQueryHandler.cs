@@ -1,20 +1,22 @@
 using AutoMapper;
+using MediatR;
 using Univali.Api.Entities;
 using Univali.Api.Repositories;
 
 namespace Univali.Api.Features.Customers.Queries.GetCustomerDetail;
 
-public class GetCustomerDetailQuerieHandler : IGetCustomerDetailQueryHandler {
+public class GetCustomerDetailQueryHandler : IRequestHandler<GetCustomerDetailQuery, GetCustomerDetailDto> {
     private readonly ICustomerRepository _customerRepository;
     private readonly IMapper _mapper;
 
-    public GetCustomerDetailQuerieHandler(ICustomerRepository customerRepository, IMapper mapper)
+    public GetCustomerDetailQueryHandler(ICustomerRepository customerRepository, IMapper mapper)
     {
         _customerRepository = customerRepository;
         _mapper = mapper;
     }
 
-    public async Task<GetCustomerDetailDto?> Handle (GetCustomerDetailQuerie request) {
+    public async Task<GetCustomerDetailDto> Handle(GetCustomerDetailQuery request, CancellationToken cancellationToken)
+    {
         Customer? customerFromDatabase = await _customerRepository.GetCustomerByIdAsync(request.Id);
         return _mapper.Map<GetCustomerDetailDto>(customerFromDatabase);
     }
