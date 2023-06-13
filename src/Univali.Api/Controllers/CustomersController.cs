@@ -9,7 +9,11 @@ using Microsoft.Extensions.Options;
 using Univali.Api.DbContexts;
 using Univali.Api.Entities;
 using Univali.Api.Features.Customers.Commands.CreateCustomer;
+using Univali.Api.Features.Customers.Commands.DeleteCustomer;
+using Univali.Api.Features.Customers.Commands.UpdateCustomer;
 using Univali.Api.Features.Customers.Queries.GetCustomerDetail;
+using Univali.Api.Features.Customers.Queries.GetCustomerDetailByCpf;
+using Univali.Api.Features.Customers.Queries.GetCustomersDetail;
 using Univali.Api.Models;
 using Univali.Api.Repositories;
 
@@ -31,10 +35,11 @@ public class CustomersController : MainController
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<CustomerDto>>> GetCustomersAsync()
+    public async Task<ActionResult<IEnumerable<CustomerDto>>> GetCustomersAsync([FromServices] IGetCustomersDetailQueryHandler handler)
     {
-        IEnumerable<Customer> customersFromDatabase = await _customerRepository.GetCustomersAsync();
-        IEnumerable<CustomerDto> customersToReturn = _mapper.Map<IEnumerable<CustomerDto>>(customersFromDatabase);
+        GetCustomersDetailQuerie getCustomersDetailQuerie = new GetCustomersDetailQuerie();
+        IEnumerable<GetCustomersDetailDto?> customersToReturn = await handler.Handle(getCustomersDetailQuerie);
+
         return Ok(customersToReturn);
     }
 
@@ -42,7 +47,7 @@ public class CustomersController : MainController
     public async Task<ActionResult<CustomerDto>> GetCustomerByIdAsync([FromServices] IGetCustomerDetailQueryHandler handler, int id)
     {
         GetCustomerDetailQuerie getCustomerDetailQuery = new GetCustomerDetailQuerie {Id = id};
-        var customerToReturn = await handler.Handle(getCustomerDetailQuery);
+        GetCustomerDetailDto? customerToReturn = await handler.Handle(getCustomerDetailQuery);
 
         if (customerToReturn == null) return NotFound();
 
@@ -51,12 +56,12 @@ public class CustomersController : MainController
 
 
     [HttpGet("cpf/{cpf}")]
-    public async Task<ActionResult<CustomerDto>> GetCustomerByCpfAsync(string cpf)
+    public async Task<ActionResult<CustomerDto>> GetCustomerByCpfAsync([FromServices] IGetCustomerDetailByCpfQueryHandler handler, string cpf)
     {
-        Customer? customerFromDatabase = await _customerRepository.GetCustomerByCpfAsync(cpf);
-        if (customerFromDatabase == null) return NotFound();
+        GetCustomerDetailByCpfQuerie getCustomerDetailByCpfQuery = new GetCustomerDetailByCpfQuerie {Cpf = cpf};
+        GetCustomerDetailByCpfDto? customerToReturn = await handler.Handle(getCustomerDetailByCpfQuery);
 
-        CustomerDto customerToReturn = _mapper.Map<CustomerDto>(customerFromDatabase);
+        if (customerToReturn == null) return NotFound();
 
         return Ok(customerToReturn);
     }
@@ -64,7 +69,7 @@ public class CustomersController : MainController
     [HttpPost]
     public async Task<ActionResult<CustomerDto>> CreateCustomerAsync([FromServices] ICreateCustomerCommandHandler handler, CreateCustomerCommand createCustomerCommand) {
 
-        var customerToReturn = await handler.Handle(createCustomerCommand);
+        CreateCustomerDto? customerToReturn = await handler.Handle(createCustomerCommand);
         
         return CreatedAtRoute
         (
@@ -75,27 +80,22 @@ public class CustomersController : MainController
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateCustomerAsync(int id, CustomerForUpdateDto customerForUpdateDto)
+    public async Task<ActionResult> UpdateCustomerAsync([FromServices] IUpdateCustomerCommandHandler handler, UpdateCustomerCommand updateCustomerCommand, int id)
     {
-        if (id != customerForUpdateDto.Id) return BadRequest();
+        if (id != updateCustomerCommand.Id) return BadRequest();
 
-        Customer? customerFromDatabase = await _customerRepository.GetCustomerByIdAsync(id);
-        if (customerFromDatabase == null) return NotFound();
-
-        _mapper.Map(customerForUpdateDto, customerFromDatabase);
-        await _customerRepository.SaveChangesAsync();
+        bool result = await handler.Handle(updateCustomerCommand, id);
+        if(!result) return NotFound();
 
         return NoContent();
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteCustomerAsync(int id)
+    public async Task<ActionResult> DeleteCustomerAsync([FromServices] IDeleteCustomerCommandHandler handler, int id)
     {
-        Customer? customerFromDatabase = await _customerRepository.GetCustomerByIdAsync(id);
-        if (customerFromDatabase == null) return NotFound();
-
-        _customerRepository.DeleteCustomer(customerFromDatabase);
-        _customerRepository.SaveChangesAsync();
+        DeleteCustomerCommand deleteCustomerCommand = new DeleteCustomerCommand {Id = id};
+        bool result = await handler.Handle(deleteCustomerCommand);
+        if(!result) return NotFound();
 
         return NoContent();
     }
