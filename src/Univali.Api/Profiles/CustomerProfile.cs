@@ -24,5 +24,11 @@ public class CustomerProfile : Profile {
         CreateMap<Univali.Api.Features.Customers.Commands.UpdateCustomer.UpdateCustomerCommand, Entities.Customer>();
         CreateMap<Univali.Api.Features.Customers.Commands.PatchCustomer.PatchCustomerDto, Entities.Customer>();
         CreateMap<Entities.Customer, Univali.Api.Features.Customers.Commands.PatchCustomer.PatchCustomerDto>();
+
+        CreateMap<Entities.Customer, Univali.Api.Features.CustomersWithAddresses.Queries.GetCustomersWithAddressesDetail.CustomerForGetCustomersWithAddressesDetailDto>();
+        CreateMap<Entities.Customer, Univali.Api.Features.CustomersWithAddresses.Queries.GetCustomerWithAddressesDetail.CustomerForGetCustomerWithAddressesDetailDto>();
+        CreateMap<Univali.Api.Features.CustomersWithAddresses.Commands.CreateCustomerWithAddresses.CreateCustomerWithAddressesCommand, Entities.Customer>();
+        CreateMap<Entities.Customer, Univali.Api.Features.CustomersWithAddresses.Commands.CreateCustomerWithAddresses.CustomerToReturnForCreateCustomerWithAddressesDto>();
+        CreateMap<Univali.Api.Features.CustomersWithAddresses.Commands.UpdateCustomerWithAddresses.UpdateCustomerWithAddressesCommand, Entities.Customer>();
     }
 }

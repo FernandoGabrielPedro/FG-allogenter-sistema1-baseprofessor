@@ -17,5 +17,11 @@ public class AddressProfile : Profile {
         CreateMap<Univali.Api.Features.Addresses.Commands.CreateAddress.CreateAddressCommand, Entities.Address>();
         CreateMap<Entities.Address, Univali.Api.Features.Addresses.Commands.CreateAddress.CreateAddressDto>();
         CreateMap<Univali.Api.Features.Addresses.Commands.UpdateAddress.UpdateAddressCommand, Entities.Address>();
+
+        CreateMap<Entities.Address, Univali.Api.Features.CustomersWithAddresses.Queries.GetCustomersWithAddressesDetail.AddressForGetCustomersWithAddressesDetailDto>();
+        CreateMap<Entities.Address, Univali.Api.Features.CustomersWithAddresses.Queries.GetCustomerWithAddressesDetail.AddressForGetCustomerWithAddressesDetailDto>();
+        CreateMap<Univali.Api.Features.CustomersWithAddresses.Commands.CreateCustomerWithAddresses.AddressToCreationForCreateCustomerWithAddressesDto, Entities.Address>();
+        CreateMap<Entities.Address, Univali.Api.Features.CustomersWithAddresses.Commands.CreateCustomerWithAddresses.AddressToReturnForCreateCustomerWithAddressesDto>();
+        CreateMap<Univali.Api.Features.CustomersWithAddresses.Commands.UpdateCustomerWithAddresses.AddressToUpdateForUpdateCustomerWithAddressesDto, Entities.Address>();
     }
 }

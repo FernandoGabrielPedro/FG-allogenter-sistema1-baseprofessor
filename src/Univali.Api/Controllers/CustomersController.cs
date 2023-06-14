@@ -16,6 +16,10 @@ using Univali.Api.Features.Customers.Commands.UpdateCustomer;
 using Univali.Api.Features.Customers.Queries.GetCustomerDetail;
 using Univali.Api.Features.Customers.Queries.GetCustomerDetailByCpf;
 using Univali.Api.Features.Customers.Queries.GetCustomersDetail;
+using Univali.Api.Features.CustomersWithAddresses.Commands.CreateCustomerWithAddresses;
+using Univali.Api.Features.CustomersWithAddresses.Commands.UpdateCustomerWithAddresses;
+using Univali.Api.Features.CustomersWithAddresses.Queries.GetCustomersWithAddressesDetail;
+using Univali.Api.Features.CustomersWithAddresses.Queries.GetCustomerWithAddressesDetail;
 using Univali.Api.Models;
 using Univali.Api.Repositories;
 
@@ -121,16 +125,11 @@ public class CustomersController : MainController
         return NoContent();
     }
 
-    //Arrumar Async With-Addresses
     [HttpGet("with-addresses")]
-    public async Task<ActionResult<IEnumerable<CustomerWithAddressesDto>>> GetCustomersWithAddressesAsync()
+    public async Task<ActionResult<IEnumerable<CustomerForGetCustomersWithAddressesDetailDto>>> GetCustomersWithAddressesAsync()
     {
-        IEnumerable<Customer> customersFromDatabase = await _customerRepository.GetCustomersWithAddressesAsync();
-
-        IEnumerable<CustomerWithAddressesDto> customersToReturn = _mapper.Map<IEnumerable<CustomerWithAddressesDto>>(customersFromDatabase);
-        foreach(CustomerWithAddressesDto c in customersToReturn) {
-            c.Addresses = _mapper.Map<ICollection<AddressDto>>(_customerRepository.GetAddressesByCustomerIdAsync(c.Id).Result);
-        }
+        GetCustomersWithAddressesDetailQuery getCustomersWithAddressesDetailQuery = new GetCustomersWithAddressesDetailQuery();
+        IEnumerable<CustomerForGetCustomersWithAddressesDetailDto> customersToReturn = await _mediator.Send(getCustomersWithAddressesDetailQuery);
 
         return Ok(customersToReturn);
     }
@@ -138,25 +137,17 @@ public class CustomersController : MainController
     [HttpGet("with-addresses/{id}", Name = "GetCustomerWithAddressesById")]
     public async Task<ActionResult<IEnumerable<CustomerWithAddressesDto>>> GetCustomerWithAddressesByIdAsync(int id)
     {
-        Customer? customerFromDatabase = await _customerRepository.GetCustomerWithAddressesByIdAsync(id);
-        if (customerFromDatabase == null) return NotFound();
-
-        CustomerWithAddressesDto customerToReturn = _mapper.Map<CustomerWithAddressesDto>(customerFromDatabase);
-        customerToReturn.Addresses = _mapper.Map<ICollection<AddressDto>>(_customerRepository.GetAddressesByCustomerIdAsync(id).Result);
+        GetCustomerWithAddressesDetailQuery getCustomerWithAddressesDetailQuery = new GetCustomerWithAddressesDetailQuery {Id = id};
+        CustomerForGetCustomerWithAddressesDetailDto customerToReturn = await _mediator.Send(getCustomerWithAddressesDetailQuery);
 
         return Ok(customerToReturn);
     }
 
     [HttpPost("with-addresses")]
-    public async Task<ActionResult<CustomerWithAddressesDto>> CreateCustomerWithAddressesAsync(
-        CustomerForCreationWithAddressesDto customerForCreationWithAddressesDto)
+    public async Task<ActionResult<CustomerToReturnForCreateCustomerWithAddressesDto>> CreateCustomerWithAddressesAsync(
+        CreateCustomerWithAddressesCommand createCustomerWithAddressesCommand)
     {
-        Customer customerEntity = _mapper.Map<Customer>(customerForCreationWithAddressesDto);
-
-        _customerRepository.CreateCustomer(customerEntity);
-        await _customerRepository.SaveChangesAsync();
-
-        CustomerWithAddressesDto customerToReturn = _mapper.Map<CustomerWithAddressesDto>(customerEntity);
+        CustomerToReturnForCreateCustomerWithAddressesDto customerToReturn = await _mediator.Send(createCustomerWithAddressesCommand);
 
         return CreatedAtRoute
         (
@@ -166,20 +157,15 @@ public class CustomersController : MainController
         );
     }
 
-    //ARRUMAR
     [HttpPut("with-addresses/{id}")]
     public async Task<ActionResult> UpdateCustomerWithAddress(int id,
-        CustomerForUpdateWithAddressesDto customerForUpdateWithAddressesDto)
+        UpdateCustomerWithAddressesCommand updateCustomerWithAddressesCommand)
     {
-        if (id != customerForUpdateWithAddressesDto.Id) return BadRequest();
+        if (id != updateCustomerWithAddressesCommand.Id) return BadRequest();
 
-        Customer? customerFromDatabase = await _customerRepository.GetCustomerWithAddressesByIdAsync(id);
-        if (customerFromDatabase == null) return NotFound();
+        bool result = await _mediator.Send(updateCustomerWithAddressesCommand);
 
-        var updatedCustomer = _mapper.Map<Customer>(customerForUpdateWithAddressesDto);
-        _mapper.Map(updatedCustomer, customerFromDatabase);
-        await _customerRepository.SaveChangesAsync();
-
+        if(!result) return NotFound();
         return NoContent();
     }
 }
