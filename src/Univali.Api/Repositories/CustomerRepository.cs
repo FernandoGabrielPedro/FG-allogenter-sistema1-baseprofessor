@@ -39,8 +39,8 @@ public class CustomerRepository : ICustomerRepository {
         _context.Customers.Add(customerEntity);
     }
 
-    public void DeleteCustomer(Customer customerFromDatabase) {
-        _context.Customers.Remove(customerFromDatabase);
+    public void DeleteCustomer(Customer customerEntity) {
+        _context.Customers.Remove(customerEntity);
     }
 
     public async void PartiallyUpdateCustomerAsync()
@@ -67,12 +67,18 @@ public class CustomerRepository : ICustomerRepository {
     public void CreateAddress(Address addressEntity) {
         _context.Addresses.AddAsync(addressEntity);
     }
-    public void DeleteAddress(Address addressFromDatabase) {
-        _context.Addresses.Remove(addressFromDatabase);
+    public void DeleteAddress(Address addressEntity) {
+        _context.Addresses.Remove(addressEntity);
     }
+
 
 
     public async Task<IEnumerable<Customer>> GetCustomersWithAddressesAsync() {
         return await _context.Customers.Include(c => c.Addresses).OrderBy(c => c.Id).ToListAsync();
+    }
+
+    public async Task<Customer?> GetCustomerWithAddressesByIdAsync(int id) {
+        IEnumerable<Customer> customersList = await _context.Customers.Include(c => c.Addresses).ToListAsync();
+        return customersList.FirstOrDefault(c => c.Id == id);
     }
 }

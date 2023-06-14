@@ -211,3 +211,5 @@ D:\Faculdade\AllogEnter\FG-allogenter-sistema1-baseprofessor\src\Univali.Api\obj
 D:\Faculdade\AllogEnter\FG-allogenter-sistema1-baseprofessor\src\Univali.Api\obj\Debug\net7.0\ref\Univali.Api.dll
 C:\Users\7755287\Downloads\FG-allogenter-sistema1-baseprofessor\src\Univali.Api\bin\Debug\net7.0\MediatR.dll
 C:\Users\7755287\Downloads\FG-allogenter-sistema1-baseprofessor\src\Univali.Api\bin\Debug\net7.0\MediatR.Contracts.dll
+D:\Faculdade\AllogEnter\FG-allogenter-sistema1-baseprofessor\src\Univali.Api\bin\Debug\net7.0\MediatR.dll
+D:\Faculdade\AllogEnter\FG-allogenter-sistema1-baseprofessor\src\Univali.Api\bin\Debug\net7.0\MediatR.Contracts.dll

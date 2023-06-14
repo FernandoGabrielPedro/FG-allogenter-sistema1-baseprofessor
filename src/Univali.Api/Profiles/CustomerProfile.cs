@@ -10,6 +10,7 @@ public class CustomerProfile : Profile {
         CreateMap<Models.CustomerForPatchDto, Entities.Customer>();
         CreateMap<Models.CustomerForCreationDto, Entities.Customer>();
         CreateMap<Models.CustomerForUpdateDto, Entities.Customer>();
+        CreateMap<Entities.Customer, Models.CustomerForPatchDto>();
         CreateMap<Entities.Customer, Models.CustomerWithAddressesDto>();
         CreateMap<Models.CustomerForCreationWithAddressesDto, Entities.Customer>();
         CreateMap<Models.CustomerForUpdateWithAddressesDto, Entities.Customer>();
@@ -21,5 +22,7 @@ public class CustomerProfile : Profile {
         CreateMap<Univali.Api.Features.Customers.Commands.CreateCustomer.CreateCustomerCommand, Entities.Customer>();
         CreateMap<Entities.Customer, Univali.Api.Features.Customers.Commands.CreateCustomer.CreateCustomerDto>();
         CreateMap<Univali.Api.Features.Customers.Commands.UpdateCustomer.UpdateCustomerCommand, Entities.Customer>();
+        CreateMap<Univali.Api.Features.Customers.Commands.PatchCustomer.PatchCustomerDto, Entities.Customer>();
+        CreateMap<Entities.Customer, Univali.Api.Features.Customers.Commands.PatchCustomer.PatchCustomerDto>();
     }
 }

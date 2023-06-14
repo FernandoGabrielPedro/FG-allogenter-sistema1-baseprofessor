@@ -11,6 +11,7 @@ using Univali.Api.DbContexts;
 using Univali.Api.Entities;
 using Univali.Api.Features.Customers.Commands.CreateCustomer;
 using Univali.Api.Features.Customers.Commands.DeleteCustomer;
+using Univali.Api.Features.Customers.Commands.PatchCustomer;
 using Univali.Api.Features.Customers.Commands.UpdateCustomer;
 using Univali.Api.Features.Customers.Queries.GetCustomerDetail;
 using Univali.Api.Features.Customers.Queries.GetCustomerDetailByCpf;
@@ -24,15 +25,11 @@ namespace Univali.Api.Controllers;
 [Route("api/customers")]
 public class CustomersController : MainController
 {
-    private readonly Data _data;
     private readonly IMapper _mapper;
-    private readonly CustomerContext _context;
     private readonly ICustomerRepository _customerRepository;
     private readonly IMediator _mediator;
-    public CustomersController (Data data, IMapper mapper, CustomerContext context, ICustomerRepository customerRepository, IMediator mediator) {
-        _data = data ?? throw new ArgumentNullException(nameof(data));
+    public CustomersController (IMapper mapper, ICustomerRepository customerRepository, IMediator mediator) {
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-        _context = context ?? throw new ArgumentNullException(nameof(context));
         _customerRepository = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
     }
@@ -70,9 +67,9 @@ public class CustomersController : MainController
     }
 
     [HttpPost]
-    public async Task<ActionResult<CustomerDto>> CreateCustomerAsync(CreateCustomerCommand createCustomerCommand) {
+    public async Task<ActionResult<CreateCustomerDto>> CreateCustomerAsync(CreateCustomerCommand createCustomerCommand) {
 
-        CreateCustomerDto? customerToReturn = await _mediator.Send(createCustomerCommand);
+        CreateCustomerDto customerToReturn = await _mediator.Send(createCustomerCommand);
         
         return CreatedAtRoute
         (
@@ -99,7 +96,6 @@ public class CustomersController : MainController
         DeleteCustomerCommand deleteCustomerCommand = new DeleteCustomerCommand {Id = id};
         bool result = await _mediator.Send(deleteCustomerCommand);
         if(!result) return NotFound();
-
         return NoContent();
     }
 
@@ -108,9 +104,7 @@ public class CustomersController : MainController
         [FromBody] JsonPatchDocument<CustomerForPatchDto> patchDocument,
         [FromRoute] int id)
     {
-        Customer? customerFromDatabase = _context.Customers
-            .FirstOrDefault(customer => customer.Id == id);
-
+        Customer? customerFromDatabase = await _customerRepository.GetCustomerByIdAsync(id);
         if (customerFromDatabase == null) return NotFound();
 
         CustomerForPatchDto customerToPatch = _mapper.Map<CustomerForPatchDto>(customerFromDatabase);
@@ -122,14 +116,12 @@ public class CustomersController : MainController
 
         customerFromDatabase.Name = customerToPatch.Name;
         customerFromDatabase.Cpf = customerToPatch.Cpf;
-        _context.SaveChanges();
+        await _customerRepository.SaveChangesAsync();
 
         return NoContent();
-
     }
 
     //Arrumar Async With-Addresses
-
     [HttpGet("with-addresses")]
     public async Task<ActionResult<IEnumerable<CustomerWithAddressesDto>>> GetCustomersWithAddressesAsync()
     {
@@ -146,7 +138,7 @@ public class CustomersController : MainController
     [HttpGet("with-addresses/{id}", Name = "GetCustomerWithAddressesById")]
     public async Task<ActionResult<IEnumerable<CustomerWithAddressesDto>>> GetCustomerWithAddressesByIdAsync(int id)
     {
-        Customer? customerFromDatabase = await _customerRepository.GetCustomerByIdAsync(id);
+        Customer? customerFromDatabase = await _customerRepository.GetCustomerWithAddressesByIdAsync(id);
         if (customerFromDatabase == null) return NotFound();
 
         CustomerWithAddressesDto customerToReturn = _mapper.Map<CustomerWithAddressesDto>(customerFromDatabase);
@@ -181,8 +173,7 @@ public class CustomersController : MainController
     {
         if (id != customerForUpdateWithAddressesDto.Id) return BadRequest();
 
-        Customer? customerFromDatabase = _context.Customers.Include(c => c.Addresses)
-            .FirstOrDefault(customer => customer.Id == id);
+        Customer? customerFromDatabase = await _customerRepository.GetCustomerWithAddressesByIdAsync(id);
         if (customerFromDatabase == null) return NotFound();
 
         var updatedCustomer = _mapper.Map<Customer>(customerForUpdateWithAddressesDto);
