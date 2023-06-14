@@ -6,7 +6,7 @@ using Univali.Api.ValidationAttributes;
 
 namespace Univali.Api.Features.Customers.Commands.PatchCustomer;
 
-public class PatchCustomerCommand : IRequest<Customer?>
+public class PatchCustomerCommand : IRequest<PatchCustomerReturnDto?>
 {
     public JsonPatchDocument<PatchCustomerDto> PatchDocument {get; set;}
     public int Id {get; set;}

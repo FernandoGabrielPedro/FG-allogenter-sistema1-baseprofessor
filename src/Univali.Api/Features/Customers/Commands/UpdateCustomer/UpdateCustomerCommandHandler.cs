@@ -21,7 +21,8 @@ public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerComman
         Customer? customerEntity = await _customerRepository.GetCustomerByIdAsync(request.Id);
         if(customerEntity == null) return false;
 
-        _mapper.Map(request, customerEntity);
+        Customer newCustomerValues = _mapper.Map<Customer>(request);
+        _customerRepository.UpdateCustomer(customerEntity, newCustomerValues);
         await _customerRepository.SaveChangesAsync();
 
         return true;

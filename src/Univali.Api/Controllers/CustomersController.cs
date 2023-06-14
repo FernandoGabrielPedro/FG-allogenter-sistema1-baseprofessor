@@ -105,22 +105,18 @@ public class CustomersController : MainController
 
     [HttpPatch("{id}")]
     public async Task<ActionResult> PartiallyUpdateCustomerAsync(
-        [FromBody] JsonPatchDocument<CustomerForPatchDto> patchDocument,
+        [FromBody] JsonPatchDocument<PatchCustomerDto> patchDocument,
         [FromRoute] int id)
     {
-        Customer? customerFromDatabase = await _customerRepository.GetCustomerByIdAsync(id);
-        if (customerFromDatabase == null) return NotFound();
+        PatchCustomerCommand patchCustomerCommand = new PatchCustomerCommand {PatchDocument = patchDocument, Id = id};
+        PatchCustomerReturnDto? customerToPatch = await _mediator.Send(patchCustomerCommand);
 
-        CustomerForPatchDto customerToPatch = _mapper.Map<CustomerForPatchDto>(customerFromDatabase);
-
-        patchDocument.ApplyTo(customerToPatch);
-
+        if(customerToPatch == null) return NotFound();
         if(!TryValidateModel(customerToPatch))
             return ValidationProblem(ModelState);
-
-        customerFromDatabase.Name = customerToPatch.Name;
-        customerFromDatabase.Cpf = customerToPatch.Cpf;
-        await _customerRepository.SaveChangesAsync();
+        
+        UpdateCustomerCommand updateCustomerCommand = _mapper.Map<UpdateCustomerCommand>(customerToPatch);
+        await _mediator.Send(updateCustomerCommand);
 
         return NoContent();
     }

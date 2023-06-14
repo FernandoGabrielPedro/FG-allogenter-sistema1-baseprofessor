@@ -21,7 +21,8 @@ public class UpdateAddressCommandHandler : IRequestHandler<UpdateAddressCommand,
         Address? addressEntity = await _customerRepository.GetAddressByIdAsync(request.Id);
         if(addressEntity == null) return false;
 
-        _mapper.Map(request, addressEntity);
+        Address newAddressValues = _mapper.Map<Address>(request);
+        _customerRepository.UpdateAddress(addressEntity, newAddressValues);
         await _customerRepository.SaveChangesAsync();
 
         return true;

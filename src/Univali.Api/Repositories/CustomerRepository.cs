@@ -8,9 +8,11 @@ namespace Univali.Api.Repositories;
 
 public class CustomerRepository : ICustomerRepository {
     private readonly CustomerContext _context;
+    private readonly IMapper _mapper;
 
-    public CustomerRepository(CustomerContext customerContext) {
+    public CustomerRepository(CustomerContext customerContext, IMapper mapper) {
         _context = customerContext ?? throw new ArgumentNullException(nameof(customerContext));
+        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
 
@@ -39,13 +41,12 @@ public class CustomerRepository : ICustomerRepository {
         _context.Customers.Add(customerEntity);
     }
 
-    public void DeleteCustomer(Customer customerEntity) {
-        _context.Customers.Remove(customerEntity);
+    public void UpdateCustomer(Customer customerEntity, Customer newCustomerValues) {
+        _mapper.Map(newCustomerValues, customerEntity);
     }
 
-    public async void PartiallyUpdateCustomerAsync()
-    {
-        throw new NotImplementedException();
+    public void DeleteCustomer(Customer customerEntity) {
+        _context.Customers.Remove(customerEntity);
     }
 
 
@@ -67,6 +68,11 @@ public class CustomerRepository : ICustomerRepository {
     public void CreateAddress(Address addressEntity) {
         _context.Addresses.AddAsync(addressEntity);
     }
+
+    public void UpdateAddress(Address addressEntity, Address newAddressValues) {
+        _mapper.Map(newAddressValues, addressEntity);
+    }
+
     public void DeleteAddress(Address addressEntity) {
         _context.Addresses.Remove(addressEntity);
     }

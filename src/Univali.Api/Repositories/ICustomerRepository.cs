@@ -10,13 +10,14 @@ public interface ICustomerRepository {
     Task<Customer?> GetCustomerByIdAsync(int id);
     Task<Customer?> GetCustomerByCpfAsync(string cpf);
     void CreateCustomer(Customer customerEntity);
+    void UpdateCustomer(Customer customerEntity, Customer newCustomerValues);
     void DeleteCustomer(Customer customerEntity);
-    void PartiallyUpdateCustomerAsync();
     
     Task<IEnumerable<Address>> GetAddressesAsync();
     Task<Address?> GetAddressByIdAsync(int id);
     Task<IEnumerable<Address>> GetAddressesByCustomerIdAsync(int customerId);
     void CreateAddress(Address addressEntity);
+    void UpdateAddress(Address addressEntity, Address newAddressValues);
     void DeleteAddress(Address addressEntity);
 
     Task<IEnumerable<Customer>> GetCustomersWithAddressesAsync();

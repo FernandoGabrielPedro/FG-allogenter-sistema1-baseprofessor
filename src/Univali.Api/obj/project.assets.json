@@ -1824,32 +1824,36 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Fernando\\.nuget\\packages\\": {},
-    "D:\\Programas\\Visual Studio Community 2022\\Components\\NuGetPackages": {}
+    "C:\\Users\\7755287\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
+    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Faculdade\\AllogEnter\\FG-allogenter-sistema1-baseprofessor\\src\\Univali.Api\\Univali.Api.csproj",
+      "projectUniqueName": "C:\\Users\\7755287\\Downloads\\FG-allogenter-sistema1-baseprofessor\\src\\Univali.Api\\Univali.Api.csproj",
       "projectName": "Univali.Api",
-      "projectPath": "D:\\Faculdade\\AllogEnter\\FG-allogenter-sistema1-baseprofessor\\src\\Univali.Api\\Univali.Api.csproj",
-      "packagesPath": "C:\\Users\\Fernando\\.nuget\\packages\\",
-      "outputPath": "D:\\Faculdade\\AllogEnter\\FG-allogenter-sistema1-baseprofessor\\src\\Univali.Api\\obj\\",
+      "projectPath": "C:\\Users\\7755287\\Downloads\\FG-allogenter-sistema1-baseprofessor\\src\\Univali.Api\\Univali.Api.csproj",
+      "packagesPath": "C:\\Users\\7755287\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\7755287\\Downloads\\FG-allogenter-sistema1-baseprofessor\\src\\Univali.Api\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "D:\\Programas\\Visual Studio Community 2022\\Components\\NuGetPackages"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\",
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Fernando\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\7755287\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -1922,7 +1926,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
       }
     }
   }

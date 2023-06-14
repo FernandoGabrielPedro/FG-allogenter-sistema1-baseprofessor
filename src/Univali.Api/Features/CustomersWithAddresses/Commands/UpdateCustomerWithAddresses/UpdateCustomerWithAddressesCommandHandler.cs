@@ -22,7 +22,7 @@ public class UpdateCustomerWithAddressesCommandHandler : IRequestHandler<UpdateC
         if (customerFromDatabase == null) return false;
 
         Customer updatedCustomer = _mapper.Map<Customer>(request);
-        _mapper.Map(updatedCustomer, customerFromDatabase);
+        _customerRepository.UpdateCustomer(customerFromDatabase, updatedCustomer);
         await _customerRepository.SaveChangesAsync();
 
         return true;
