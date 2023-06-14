@@ -1,6 +1,9 @@
+using System.Reflection;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Univali.Api;
 using Univali.Api.Configuration;
 using Univali.Api.DbContexts;
@@ -21,12 +24,20 @@ builder.WebHost.ConfigureKestrel(options => {
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddSingleton<Data>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
-//builder.Services.AddTransient<IGetCustomersDetailQueryHandler, GetCustomersDetailQueryHandler>();
-//builder.Services.AddTransient<IGetCustomerDetailQueryHandler, GetCustomerDetailQueryHandler>();
-//builder.Services.AddTransient<IGetCustomerDetailByCpfQueryHandler, GetCustomerDetailByCpfQueryHandler>();
-//builder.Services.AddTransient<ICreateCustomerCommandHandler, CreateCustomerCommandHandler>();
-//builder.Services.AddTransient<IUpdateCustomerCommandHandler, UpdateCustomerCommandHandler>();
-//builder.Services.AddTransient<IDeleteCustomerCommandHandler, DeleteCustomerCommandHandler>();
+
+builder.Services.AddAuthentication("Bearer").AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new() {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Authentication:Issuer"],
+        ValidAudience = builder.Configuration["Authentication:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.ASCII.GetBytes(builder.Configuration["Authentication:SecretKey"]!)
+        )
+    };
+});
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 builder.Services.AddDbContext<CustomerContext>(options => options.UseNpgsql("Host=localhost;Database=Univali;Username=postgres;Password=123456"));
@@ -78,7 +89,7 @@ builder.Services.AddControllers(options =>{
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(); //Continuar a implementação de Swagger
 
 var app = builder.Build();
 
@@ -91,6 +102,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
