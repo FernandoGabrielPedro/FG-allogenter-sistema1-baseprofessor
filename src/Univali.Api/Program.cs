@@ -89,7 +89,29 @@ builder.Services.AddControllers(options =>{
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(); //Continuar a implementação de Swagger
+builder.Services.AddSwaggerGen(setupAction =>
+{
+   /*
+   Retorna o nome do assembly atual como uma string por reflection
+
+   "Assembly.GetExecutingAssembly()" retorna uma referência para o assembly
+   que contém o código que está sendo executado atualmente.
+
+   "GetName()" é chamado na referência do assembly para obter um objeto do tipo AssemblyName,
+   que contém informações sobre o assembly, como seu nome, versão, cultura e chave pública.
+
+   "Name" é lido a partir do objeto AssemblyName para obter o nome do assembly como uma string.
+   */
+   var xmlCommentsFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+   
+   // "Path.Combine" cria um formato de caminho válido com os parâmetros
+   // "AppContext.BaseDirectory" é uma propriedade que retorna o caminho base do diretório em que a aplicação está sendo executada
+   var xmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
+
+
+   // Inclui os comentários XML na documentação do Swagger.
+   setupAction.IncludeXmlComments(xmlCommentsFullPath);
+});
 
 var app = builder.Build();
 
