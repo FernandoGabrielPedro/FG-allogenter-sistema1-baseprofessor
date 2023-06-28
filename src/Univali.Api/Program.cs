@@ -24,6 +24,7 @@ builder.WebHost.ConfigureKestrel(options => {
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddSingleton<Data>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
 
 builder.Services.AddAuthentication("Bearer").AddJwtBearer(options =>
 {
@@ -41,6 +42,7 @@ builder.Services.AddAuthentication("Bearer").AddJwtBearer(options =>
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 builder.Services.AddDbContext<CustomerContext>(options => options.UseNpgsql("Host=localhost;Database=Univali;Username=postgres;Password=123456"));
+builder.Services.AddDbContext<PublisherContext>(options => options.UseNpgsql("Host=localhost;Database=Univali;Username=postgres;Password=123456"));
 
 // Add services to the container.
 

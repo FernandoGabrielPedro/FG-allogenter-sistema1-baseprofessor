@@ -221,3 +221,12 @@ C:\Users\7755287\Downloads\FG-allogenter-sistema1-baseprofessor\src\Univali.Api\
 C:\Users\7755287\Downloads\FG-allogenter-sistema1-baseprofessor\src\Univali.Api\bin\Debug\net7.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\7755287\Downloads\FG-allogenter-sistema1-baseprofessor\src\Univali.Api\bin\Debug\net7.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\7755287\Downloads\FG-allogenter-sistema1-baseprofessor\src\Univali.Api\bin\Debug\net7.0\System.IdentityModel.Tokens.Jwt.dll
+D:\Faculdade\AllogEnter\FG-allogenter-sistema1-baseprofessor\src\Univali.Api\bin\Debug\net7.0\Univali.Api.xml
+D:\Faculdade\AllogEnter\FG-allogenter-sistema1-baseprofessor\src\Univali.Api\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\Faculdade\AllogEnter\FG-allogenter-sistema1-baseprofessor\src\Univali.Api\bin\Debug\net7.0\Microsoft.IdentityModel.Abstractions.dll
+D:\Faculdade\AllogEnter\FG-allogenter-sistema1-baseprofessor\src\Univali.Api\bin\Debug\net7.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\Faculdade\AllogEnter\FG-allogenter-sistema1-baseprofessor\src\Univali.Api\bin\Debug\net7.0\Microsoft.IdentityModel.Logging.dll
+D:\Faculdade\AllogEnter\FG-allogenter-sistema1-baseprofessor\src\Univali.Api\bin\Debug\net7.0\Microsoft.IdentityModel.Protocols.dll
+D:\Faculdade\AllogEnter\FG-allogenter-sistema1-baseprofessor\src\Univali.Api\bin\Debug\net7.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\Faculdade\AllogEnter\FG-allogenter-sistema1-baseprofessor\src\Univali.Api\bin\Debug\net7.0\Microsoft.IdentityModel.Tokens.dll
+D:\Faculdade\AllogEnter\FG-allogenter-sistema1-baseprofessor\src\Univali.Api\bin\Debug\net7.0\System.IdentityModel.Tokens.Jwt.dll
