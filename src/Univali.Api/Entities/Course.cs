@@ -13,4 +13,6 @@ public class Course {
         Description = description;
         Price = price;
     }
+
+    public Course() {}
 }

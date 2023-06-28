@@ -18,6 +18,8 @@ public class CoursesProfile : Profile {
         CreateMap<Univali.Api.Features.Courses.Commands.UpdateCourse.UpdateCourseCommand, Entities.Course>();
         CreateMap<Entities.Course, Univali.Api.Features.Courses.Commands.CreateCourseWithAuthors.CreateCourseWithAuthorsCommand>();
         CreateMap<Univali.Api.Features.Courses.Commands.CreateCourseWithAuthors.CourseForCreateCourseWithAuthorsDto, Entities.Course>();
+        CreateMap<Univali.Api.Features.Courses.Commands.CreateCourseWithAuthors.CreateCourseWithAuthorsCommand, Entities.Course>();
+        CreateMap<Entities.Course, Univali.Api.Features.Courses.Commands.CreateCourseWithAuthors.CourseForCreateCourseWithAuthorsDto>();
 
         CreateMap<Entities.Course, Univali.Api.Features.Authors.Queries.GetAuthorsWithCoursesDetail.CourseForGetAuthorsWithCoursesDetailDto>();
         CreateMap<Entities.Course, Univali.Api.Features.Authors.Queries.GetAuthorWithCoursesDetail.CourseForGetAuthorWithCoursesDetailDto>();

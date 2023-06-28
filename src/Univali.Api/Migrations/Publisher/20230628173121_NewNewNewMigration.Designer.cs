@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Univali.Api.DbContexts;
@@ -11,9 +12,11 @@ using Univali.Api.DbContexts;
 namespace Univali.Api.Migrations.Publisher
 {
     [DbContext(typeof(PublisherContext))]
-    partial class PublisherContextModelSnapshot : ModelSnapshot
+    [Migration("20230628173121_NewNewNewMigration")]
+    partial class NewNewNewMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +25,7 @@ namespace Univali.Api.Migrations.Publisher
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("AuthorsCourses", b =>
+            modelBuilder.Entity("AuthorCourse", b =>
                 {
                     b.Property<int>("AuthorId")
                         .HasColumnType("integer");
@@ -39,7 +42,7 @@ namespace Univali.Api.Migrations.Publisher
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("AuthorsCourses");
+                    b.ToTable("AuthorCourse");
                 });
 
             modelBuilder.Entity("Univali.Api.Entities.Author", b =>
@@ -63,14 +66,6 @@ namespace Univali.Api.Migrations.Publisher
                     b.HasKey("Id");
 
                     b.ToTable("Authors");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            FirstName = "Autor",
-                            LastName = "1"
-                        });
                 });
 
             modelBuilder.Entity("Univali.Api.Entities.Course", b =>
@@ -97,15 +92,6 @@ namespace Univali.Api.Migrations.Publisher
                     b.HasKey("Id");
 
                     b.ToTable("Courses");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Legal",
-                            Price = 110.98999999999999,
-                            Title = "Curso"
-                        });
                 });
 
             modelBuilder.Entity("Univali.Api.Entities.Publisher", b =>
@@ -137,7 +123,7 @@ namespace Univali.Api.Migrations.Publisher
                     b.ToTable("Pulishers");
                 });
 
-            modelBuilder.Entity("AuthorsCourses", b =>
+            modelBuilder.Entity("AuthorCourse", b =>
                 {
                     b.HasOne("Univali.Api.Entities.Author", null)
                         .WithMany()

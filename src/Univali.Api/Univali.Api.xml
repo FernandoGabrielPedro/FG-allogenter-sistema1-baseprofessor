@@ -40,5 +40,53 @@
         <member name="M:Univali.Api.Migrations.Publisher.NewContextPublisher.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:Univali.Api.Migrations.Publisher.NewNewMigration">
+            <inheritdoc />
+        </member>
+        <member name="M:Univali.Api.Migrations.Publisher.NewNewMigration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Univali.Api.Migrations.Publisher.NewNewMigration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Univali.Api.Migrations.Publisher.NewNewMigration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Univali.Api.Migrations.Publisher.NewNewNewMigration">
+            <inheritdoc />
+        </member>
+        <member name="M:Univali.Api.Migrations.Publisher.NewNewNewMigration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Univali.Api.Migrations.Publisher.NewNewNewMigration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Univali.Api.Migrations.Publisher.NewNewNewMigration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Univali.Api.Migrations.Publisher.NewMigration4">
+            <inheritdoc />
+        </member>
+        <member name="M:Univali.Api.Migrations.Publisher.NewMigration4.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Univali.Api.Migrations.Publisher.NewMigration4.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Univali.Api.Migrations.Publisher.NewMigration4.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Univali.Api.Migrations.Publisher.NewMigration5">
+            <inheritdoc />
+        </member>
+        <member name="M:Univali.Api.Migrations.Publisher.NewMigration5.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Univali.Api.Migrations.Publisher.NewMigration5.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Univali.Api.Migrations.Publisher.NewMigration5.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

@@ -19,11 +19,13 @@ public class CreateCourseWithAuthorsCommandHandler : IRequestHandler<CreateCours
     {
         Author? newAuthor;
         var courseEntity = _mapper.Map<Course>(request);
-        foreach(AuthorForCreateCourseWithAuthorsCommand author in request.Authors) {
+
+        foreach(AuthorForCreateCourseWithAuthorsCommand author in request.AuthorsIdsForCreation) {
             newAuthor = await _publisherRepository.GetAuthorByIdAsync(author.AuthorId);
             if(newAuthor == null) continue;
+            //_publisherRepository.CreateRelation(new AuthorCourse(author.AuthorId, courseEntity.Id));
             courseEntity.Authors.Add(newAuthor!);
-            newAuthor.Courses.Add(courseEntity);
+            //newAuthor.Courses.Add(courseEntity);
         }
         _publisherRepository.CreateCourse(courseEntity);
         await _publisherRepository.SaveChangesAsync();

@@ -12,8 +12,5 @@ public class Author {
         LastName = lastName;
     }
 
-    public override string ToString()
-    {
-        return $"Id: {Id}\nFirstName: {FirstName}\nLastName: {LastName}";
-    }
+    public Author() {}
 }

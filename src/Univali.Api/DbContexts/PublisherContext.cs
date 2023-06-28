@@ -10,18 +10,20 @@ public class PublisherContext : DbContext
     public DbSet<Author> Authors {get; set;} = null!;
     public DbSet<Course> Courses {get; set;} = null!;
 
-    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //public DbSet<AuthorCourse> AuthorCourses {get; set;} = null!;
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql(
-            "Host=localhost;Database=AllogProject2.Api;Username=postgres;Password=123456"
+            "Host=localhost;Database=Univali;Username=postgres;Password=123456"
         ).LogTo(Console.WriteLine,
         new[] {DbLoggerCategory.Database.Command.Name},
         LogLevel.Information)
         .EnableSensitiveDataLogging();
-    }*/
+    }
 
-    public PublisherContext(DbContextOptions<PublisherContext> options)
-    : base(options) { }
+    //public PublisherContext(DbContextOptions<PublisherContext> options)
+    //: base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -44,6 +46,15 @@ public class PublisherContext : DbContext
             .HasMaxLength(30)
             .IsRequired();
 
+        /*author
+            .HasData(
+                new Author {
+                    Id = 2,
+                    FirstName = "Autor",
+                    LastName = "1"
+                }
+            );*/
+
         
         var course = modelBuilder.Entity<Course>();
 
@@ -61,6 +72,16 @@ public class PublisherContext : DbContext
         course
             .Property(c => c.Description)
             .IsRequired(false);
+
+        /*course
+            .HasData(
+                new Course {
+                    Id = 1,
+                    Title = "Curso",
+                    Description = "Legal",
+                    Price = 110.99
+                }
+            );*/
 
 
         var publisher = modelBuilder.Entity<Publisher>();

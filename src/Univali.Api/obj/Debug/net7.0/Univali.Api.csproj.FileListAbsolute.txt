@@ -230,3 +230,4 @@ D:\Faculdade\AllogEnter\FG-allogenter-sistema1-baseprofessor\src\Univali.Api\bin
 D:\Faculdade\AllogEnter\FG-allogenter-sistema1-baseprofessor\src\Univali.Api\bin\Debug\net7.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 D:\Faculdade\AllogEnter\FG-allogenter-sistema1-baseprofessor\src\Univali.Api\bin\Debug\net7.0\Microsoft.IdentityModel.Tokens.dll
 D:\Faculdade\AllogEnter\FG-allogenter-sistema1-baseprofessor\src\Univali.Api\bin\Debug\net7.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\7755287\Downloads\FG-allogenter-sistema1-baseprofessor\src\Univali.Api\bin\Debug\net7.0\Univali.Api.xml

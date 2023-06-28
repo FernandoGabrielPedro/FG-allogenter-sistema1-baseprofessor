@@ -20,4 +20,6 @@ public interface IPublisherRepository {
     void CreateCourse(Course courseEntity);
     void UpdateCourse(Course courseEntity, Course newCourseValues);
     void DeleteCourse(Course courseEntity);
+
+    //void CreateRelation(AuthorCourse authorCourseEntity);
 }

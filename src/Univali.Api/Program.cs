@@ -42,7 +42,7 @@ builder.Services.AddAuthentication("Bearer").AddJwtBearer(options =>
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 builder.Services.AddDbContext<CustomerContext>(options => options.UseNpgsql("Host=localhost;Database=Univali;Username=postgres;Password=123456"));
-builder.Services.AddDbContext<PublisherContext>(options => options.UseNpgsql("Host=localhost;Database=Univali;Username=postgres;Password=123456"));
+builder.Services.AddDbContext<PublisherContext>();
 
 // Add services to the container.
 
