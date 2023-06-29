@@ -21,5 +21,9 @@ public interface IPublisherRepository {
     void UpdateCourse(Course courseEntity, Course newCourseValues);
     void DeleteCourse(Course courseEntity);
 
-    //void CreateRelation(AuthorCourse authorCourseEntity);
+    Task<IEnumerable<Publisher>> GetPublishersAsync();
+    Task<Publisher?> GetPublisherByIdAsync(int id);
+    void CreatePublisher(Publisher publisherEntity);
+    void UpdatePublisher(Publisher publisherEntity, Publisher newPublisherValues);
+    void DeletePublisher(Publisher publisherEntity);
 }

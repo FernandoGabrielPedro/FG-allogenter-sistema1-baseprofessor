@@ -6,7 +6,7 @@ namespace Univali.Api.DbContexts;
 
 public class PublisherContext : DbContext
 {
-    public DbSet<Publisher> Pulishers {get; set;} = null!;
+    public DbSet<Publisher> Publishers {get; set;} = null!;
     public DbSet<Author> Authors {get; set;} = null!;
     public DbSet<Course> Courses {get; set;} = null!;
 

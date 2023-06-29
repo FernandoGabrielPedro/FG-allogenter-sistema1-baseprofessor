@@ -25,12 +25,10 @@ public class PublisherRepository : IPublisherRepository {
         return await _context.Authors.Include(a => a.Courses).OrderBy(c => c.Id).ToListAsync();
     }
     public async Task<Author?> GetAuthorByIdAsync(int id) {
-        IEnumerable<Author> authorsList = await _context.Authors.ToListAsync();
-        return authorsList.FirstOrDefault(c => c.Id == id);
+        return await _context.Authors.FirstOrDefaultAsync(c => c.Id == id);
     }
     public async Task<Author?> GetAuthorWithCoursesByIdAsync(int id) {
-        IEnumerable<Author> authorsList = await _context.Authors.Include(a => a.Courses).ToListAsync();
-        return authorsList.FirstOrDefault(c => c.Id == id);
+        return await _context.Authors.Include(a => a.Courses).FirstOrDefaultAsync(c => c.Id == id);
     }
     public void CreateAuthor(Author authorEntity) {
         _context.Authors.Add(authorEntity);
@@ -49,12 +47,10 @@ public class PublisherRepository : IPublisherRepository {
         return await _context.Courses.Include(c => c.Authors).OrderBy(c => c.Id).ToListAsync();
     }
     public async Task<Course?> GetCourseByIdAsync(int id) {
-        IEnumerable<Course> coursesList = await _context.Courses.ToListAsync();
-        return coursesList.FirstOrDefault(c => c.Id == id);
+        return await _context.Courses.FirstOrDefaultAsync(c => c.Id == id);
     }
     public async Task<Course?> GetCourseWithAuthorsByIdAsync(int id) {
-        IEnumerable<Course> coursesList = await _context.Courses.Include(c => c.Authors).ToListAsync();
-        return coursesList.FirstOrDefault(c => c.Id == id);
+        return await _context.Courses.Include(c => c.Authors).FirstOrDefaultAsync(c => c.Id == id);
     }
     public void CreateCourse(Course courseEntity) {
         _context.Courses.Add(courseEntity);
@@ -66,7 +62,19 @@ public class PublisherRepository : IPublisherRepository {
         _context.Courses.Remove(courseEntity);
     }
 
-    /*public void CreateRelation(AuthorCourse authorCourseEntity) {
-        _context.AuthorCourses.Add(authorCourseEntity);
-    }*/
+    public async Task<IEnumerable<Publisher>> GetPublishersAsync() {
+        return await _context.Publishers.OrderBy(c => c.Id).ToListAsync();
+    }
+    public async Task<Publisher?> GetPublisherByIdAsync(int id) {
+        return await _context.Publishers.FirstOrDefaultAsync(p => p.Id == id);
+    }
+    public void CreatePublisher(Publisher publisherEntity) {
+        _context.Publishers.Add(publisherEntity);
+    }
+    public void UpdatePublisher(Publisher publisherEntity, Publisher newPublisherValues) {
+        _mapper.Map(publisherEntity, newPublisherValues);
+    }
+    public void DeletePublisher(Publisher publisherEntity) {
+        _context.Publishers.Remove(publisherEntity);
+    }
 }
