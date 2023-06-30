@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +41,7 @@ builder.Services.AddAuthentication("Bearer").AddJwtBearer(options =>
     };
 });
 
+builder.Services.AddScoped<IValidator<CreateCustomerCommand>, CreateCustomerCommandValidator>();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 builder.Services.AddDbContext<CustomerContext>(options => options.UseNpgsql("Host=localhost;Database=Univali;Username=postgres;Password=123456"));
 builder.Services.AddDbContext<PublisherContext>();
@@ -51,6 +53,7 @@ builder.Services.AddControllers(options =>{
 
 }).ConfigureApiBehaviorOptions(setupAction =>
        {
+            setupAction.SuppressModelStateInvalidFilter = true;
            setupAction.InvalidModelStateResponseFactory = context =>
            {
                // Cria a fábrica de um objeto de detalhes de problema de validação

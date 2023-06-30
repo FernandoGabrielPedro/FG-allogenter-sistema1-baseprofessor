@@ -1,11 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "6P1oSjqRDurYrof77G69FS9KADMsbj/9DWzUxCAKXFTslJ6TrVwHcOHz4CVwxoUabd2UZxuwjY+FrFUaAYMsLg==",
+  "dgSpecHash": "SwCdga/m9uA2YvPUnDo3A6G4X/Norv+bE4B1+cuio2SBpvlFHZ0jt6ojb7jJAv3qQL4117prvBepBSWw4ZrHjQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\7755287\\Downloads\\FG-AllogProject1\\src\\Univali.Api\\Univali.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\7755287\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\7755287\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
+    "C:\\Users\\7755287\\.nuget\\packages\\fluentvalidation\\11.5.2\\fluentvalidation.11.5.2.nupkg.sha512",
+    "C:\\Users\\7755287\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.5.2\\fluentvalidation.dependencyinjectionextensions.11.5.2.nupkg.sha512",
     "C:\\Users\\7755287\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\7755287\\.nuget\\packages\\mediatr\\12.0.1\\mediatr.12.0.1.nupkg.sha512",
     "C:\\Users\\7755287\\.nuget\\packages\\mediatr.contracts\\2.0.1\\mediatr.contracts.2.0.1.nupkg.sha512",

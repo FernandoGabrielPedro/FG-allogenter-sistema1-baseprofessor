@@ -73,15 +73,27 @@ public class CustomersController : MainController
     }
 
     [HttpPost]
-    public async Task<ActionResult<CreateCustomerDto>> CreateCustomerAsync(CreateCustomerCommand createCustomerCommand) {
+    public async Task<ActionResult<CreateCustomerCommandResponse>> CreateCustomerAsync(CreateCustomerCommand createCustomerCommand) {
 
-        CreateCustomerDto customerToReturn = await _mediator.Send(createCustomerCommand);
+        CreateCustomerCommandResponse createCustomerCommandResponse = await _mediator.Send(createCustomerCommand);
         
+        if(!createCustomerCommandResponse.IsSuccess) {
+            foreach(var error in createCustomerCommandResponse.Errors) {
+                string key = error.Key;
+                string[] values = error.Value;
+
+                foreach(var value in values) {
+                    ModelState.AddModelError(key, value);
+                }
+            }
+            return ValidationProblem(ModelState);
+        }
+
         return CreatedAtRoute
         (
             "GetCustomerById",
-            new { id = customerToReturn.Id },
-            customerToReturn
+            new { id = createCustomerCommandResponse.CusomerDto.Id },
+            createCustomerCommandResponse.CusomerDto
         );
     }
 
