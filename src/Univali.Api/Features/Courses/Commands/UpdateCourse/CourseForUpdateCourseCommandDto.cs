@@ -14,7 +14,7 @@ public class CourseForUpdateCourseDto {
     public string Description {get; set;} = string.Empty;
 
     [Required(ErrorMessage = "You should fill out the price")]
-    [Precision(3,2)]
+    [Precision(5,2)]
     [Range(0, 999.99, ErrorMessage = "Price should be between $0.00 and $999.99")]
     public double Price {get; set;}
 }

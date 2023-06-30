@@ -17,7 +17,7 @@ public class DeleteCourseCommandHandler : IRequestHandler<DeleteCourseCommand, b
 
     public async Task<bool> Handle(DeleteCourseCommand request, CancellationToken cancellationToken)
     {
-        Publisher? publisherEntity = await _publisherRepository.GetPublisherByIdAsync(request.PublisherId);
+        Publisher? publisherEntity = await _publisherRepository.GetPublisherWithCoursesByIdAsync(request.PublisherId);
         Course? courseEntity = publisherEntity?.Courses.FirstOrDefault(c => c.Id == request.CourseId);
         if(courseEntity == null) return false;
         

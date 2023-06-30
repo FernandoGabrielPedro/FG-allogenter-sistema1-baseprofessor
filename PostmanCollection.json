@@ -501,7 +501,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\":\"Curso 1\",\r\n    \"description\":\"Description\",\r\n    \"price\":\"110.99\",\r\n    \"authorsidsforcreation\":[\r\n        {\r\n            \"authorid\":\"1\"\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"title\":\"Curso Java\",\r\n    \"description\":\"Curso para desenvolvimento de uma API em Java\",\r\n    \"price\":\"110.99\",\r\n    \"authorsidsforcreation\":[\r\n        {\r\n            \"authorid\":\"1\"\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -541,7 +541,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:{{port}}/api/courses/1",
+							"raw": "http://localhost:{{port}}/api/publishers/1/courses/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -549,6 +549,8 @@
 							"port": "{{port}}",
 							"path": [
 								"api",
+								"publishers",
+								"1",
 								"courses",
 								"1"
 							]
@@ -562,7 +564,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:{{port}}/api/courses/1",
+							"raw": "http://localhost:{{port}}/api/publishers/1/courses/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -570,6 +572,8 @@
 							"port": "{{port}}",
 							"path": [
 								"api",
+								"publishers",
+								"1",
 								"courses",
 								"1"
 							]
@@ -674,7 +678,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstname\":\"Pedrinho\",\r\n    \"lastname\":\"Júnior\"\r\n}",
+							"raw": "{\r\n    \"firstname\":\"Pedro\",\r\n    \"lastname\":\"Júnior\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -890,7 +894,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstname\":\"Joãozinho\",\r\n    \"lastname\":\"Pereira\",\r\n    \"cpf\":\"12312312312\"\r\n}",
+							"raw": "{\r\n    \"firstname\":\"Felipe\",\r\n    \"lastname\":\"Ferreira\",\r\n    \"cpf\":\"12312312312\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -898,7 +902,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:{{port}}/api/publishers",
+							"raw": "http://localhost:{{port}}/api/publishers/",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -906,7 +910,8 @@
 							"port": "{{port}}",
 							"path": [
 								"api",
-								"publishers"
+								"publishers",
+								""
 							]
 						}
 					},
@@ -919,7 +924,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\":\"1\",\r\n    \"firstname\":\"Pedrinho\",\r\n    \"lastname\":\"Jóia\",\r\n    \"cpf\":\"12312312312\"\r\n}",
+							"raw": "{\r\n    \"id\":\"1\",\r\n    \"firstname\":\"João\",\r\n    \"lastname\":\"Alves\",\r\n    \"cpf\":\"98798798798\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
