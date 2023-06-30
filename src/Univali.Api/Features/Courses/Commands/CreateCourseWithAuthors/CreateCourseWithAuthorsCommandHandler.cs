@@ -23,11 +23,12 @@ public class CreateCourseWithAuthorsCommandHandler : IRequestHandler<CreateCours
         foreach(AuthorForCreateCourseWithAuthorsCommand author in request.AuthorsIdsForCreation) {
             newAuthor = await _publisherRepository.GetAuthorByIdAsync(author.AuthorId);
             if(newAuthor == null) continue;
-            //_publisherRepository.CreateRelation(new AuthorCourse(author.AuthorId, courseEntity.Id));
-            courseEntity.Authors.Add(newAuthor!);
-            //newAuthor.Courses.Add(courseEntity);
+            newAuthor.Courses.Add(courseEntity);
+            //courseEntity.Authors.Add(newAuthor!);
         }
-        _publisherRepository.CreateCourse(courseEntity);
+        Publisher? publisher = await _publisherRepository.GetPublisherByIdAsync(request.publisherId);
+        publisher!.Courses.Add(courseEntity);//não sei se é necessária a verificação de nullable nessa parte pois não sei o que ele retornaria
+        
         await _publisherRepository.SaveChangesAsync();
         var courseForReturn = _mapper.Map<CourseForCreateCourseWithAuthorsDto>(courseEntity);
         return courseForReturn;

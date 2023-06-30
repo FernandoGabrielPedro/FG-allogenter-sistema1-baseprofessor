@@ -14,5 +14,6 @@ public class CreateCourseWithAuthorsCommand : IRequest<CourseForCreateCourseWith
     [Precision(3,2)]
     [Range(0, 999.99)]
     public decimal Price {get; set;}
+    public int publisherId {get; set;}
     public List<AuthorForCreateCourseWithAuthorsCommand> AuthorsIdsForCreation {get; set;} = new();
 }

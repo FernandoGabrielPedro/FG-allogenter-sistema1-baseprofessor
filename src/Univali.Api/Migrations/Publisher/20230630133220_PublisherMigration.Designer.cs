@@ -12,8 +12,8 @@ using Univali.Api.DbContexts;
 namespace Univali.Api.Migrations.Publisher
 {
     [DbContext(typeof(PublisherContext))]
-    [Migration("20230628173626_NewMigration4")]
-    partial class NewMigration4
+    [Migration("20230630133220_PublisherMigration")]
+    partial class PublisherMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace Univali.Api.Migrations.Publisher
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("AuthorCourse", b =>
+            modelBuilder.Entity("AuthorsCourses", b =>
                 {
                     b.Property<int>("AuthorId")
                         .HasColumnType("integer");
@@ -42,7 +42,7 @@ namespace Univali.Api.Migrations.Publisher
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("AuthorCourse");
+                    b.ToTable("AuthorsCourses");
                 });
 
             modelBuilder.Entity("Univali.Api.Entities.Author", b =>
@@ -84,12 +84,17 @@ namespace Univali.Api.Migrations.Publisher
                         .HasColumnType("double precision")
                         .HasColumnName("BasePrice");
 
+                    b.Property<int>("PublisherId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(60)
                         .HasColumnType("character varying(60)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PublisherId");
 
                     b.ToTable("Courses");
                 });
@@ -120,10 +125,10 @@ namespace Univali.Api.Migrations.Publisher
 
                     b.HasKey("Id");
 
-                    b.ToTable("Pulishers");
+                    b.ToTable("Publishers");
                 });
 
-            modelBuilder.Entity("AuthorCourse", b =>
+            modelBuilder.Entity("AuthorsCourses", b =>
                 {
                     b.HasOne("Univali.Api.Entities.Author", null)
                         .WithMany()
@@ -136,6 +141,22 @@ namespace Univali.Api.Migrations.Publisher
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Univali.Api.Entities.Course", b =>
+                {
+                    b.HasOne("Univali.Api.Entities.Publisher", "Publisher")
+                        .WithMany("Courses")
+                        .HasForeignKey("PublisherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Publisher");
+                });
+
+            modelBuilder.Entity("Univali.Api.Entities.Publisher", b =>
+                {
+                    b.Navigation("Courses");
                 });
 #pragma warning restore 612, 618
         }

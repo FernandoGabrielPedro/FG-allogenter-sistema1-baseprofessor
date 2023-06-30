@@ -22,7 +22,11 @@ public interface IPublisherRepository {
     void DeleteCourse(Course courseEntity);
 
     Task<IEnumerable<Publisher>> GetPublishersAsync();
+    Task<IEnumerable<Publisher>> GetPublishersWithCoursesAsync();
+    Task<IEnumerable<Publisher>> GetPublishersWithCoursesWithAuthorsAsync();
     Task<Publisher?> GetPublisherByIdAsync(int id);
+    Task<Publisher?> GetPublisherWithCoursesByIdAsync(int id);
+    Task<Publisher?> GetPublisherWithCoursesWithAuthorsByIdAsync(int id);
     void CreatePublisher(Publisher publisherEntity);
     void UpdatePublisher(Publisher publisherEntity, Publisher newPublisherValues);
     void DeletePublisher(Publisher publisherEntity);

@@ -23,5 +23,7 @@ public class CoursesProfile : Profile {
 
         CreateMap<Entities.Course, Univali.Api.Features.Authors.Queries.GetAuthorsWithCoursesDetail.CourseForGetAuthorsWithCoursesDetailDto>();
         CreateMap<Entities.Course, Univali.Api.Features.Authors.Queries.GetAuthorWithCoursesDetail.CourseForGetAuthorWithCoursesDetailDto>();
+        CreateMap<Entities.Course, Univali.Api.Features.Publishers.Queries.GetPublishersWithCoursesDetail.CourseForGetPublishersWithCoursesDetailDto>();
+        CreateMap<Entities.Course, Univali.Api.Features.Publishers.Queries.GetPublisherWithCoursesDetail.CourseForGetPublisherWithCoursesDetailDto>();
     }
 }

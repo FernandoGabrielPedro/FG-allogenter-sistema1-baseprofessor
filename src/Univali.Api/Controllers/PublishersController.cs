@@ -5,6 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Univali.Api.Features.Publishers.Commands.CreatePublisher;
 using Univali.Api.Features.Publishers.Commands.UpdatePublisher;
 using Univali.Api.Features.Publishers.Commands.DeletePublisher;
+using Univali.Api.Features.Publishers.Queries.GetPublisherDetail;
+using Univali.Api.Features.Publishers.Queries.GetPublishersDetail;
+using Univali.Api.Features.Publishers.Queries.GetPublishersWithCoursesDetail;
+using Univali.Api.Features.Publishers.Queries.GetPublisherWithCoursesDetail;
 
 namespace Univali.Api.Controllers;
 
@@ -20,47 +24,49 @@ public class PublishersController : MainController {
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
     }
 
-    /*
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<GetCoursesDetailDto>>> GetCoursesAsync()
+    [HttpGet()]
+    public async Task<ActionResult<GetPublishersDetailDto>> GetPublishersAsync()
     {
-        GetCoursesDetailQuery getCoursesDetailQuery = new GetCoursesDetailQuery();
-        IEnumerable<GetCoursesDetailDto?> coursesToReturn = await _mediator.Send(getCoursesDetailQuery);
+        GetPublishersDetailQuery getPublisherDetailQuery = new GetPublishersDetailQuery();
+        IEnumerable<GetPublishersDetailDto>? publishersToReturn = await _mediator.Send(getPublisherDetailQuery);
 
-        return Ok(coursesToReturn);
+        if (publishersToReturn == null) return NotFound();
+
+        return Ok(publishersToReturn);
     }
 
-    [HttpGet("{id}", Name = "GetCourseById")]
-    public async Task<ActionResult<GetCourseDetailDto>> GetCourseByIdAsync(int id)
+    [HttpGet("{id}", Name = "GetPublisherById")]
+    public async Task<ActionResult<GetPublisherDetailDto>> GetPublisherByIdAsync(int id)
     {
-        GetCourseDetailQuery getCourseDetailQuery = new GetCourseDetailQuery {Id = id};
-        GetCourseDetailDto? courseToReturn = await _mediator.Send(getCourseDetailQuery);
+        GetPublisherDetailQuery getPublisherDetailQuery = new GetPublisherDetailQuery {Id = id};
+        GetPublisherDetailDto? publisherToReturn = await _mediator.Send(getPublisherDetailQuery);
 
-        if (courseToReturn == null) return NotFound();
+        if (publisherToReturn == null) return NotFound();
 
-        return Ok(courseToReturn);
+        return Ok(publisherToReturn);
     }
 
-    [HttpGet("with-authors")]
-    public async Task<ActionResult<IEnumerable<CourseForGetCoursesWithAuthorsDetailDto>>> GetCoursesWithAuthorsAsync()
+    [HttpGet("with-courses")]
+    public async Task<ActionResult<IEnumerable<PublisherForGetPublishersWithCoursesDetailDto>>> GetPublishersWithCoursesAsync()
     {
-        GetCoursesWithAuthorsDetailQuery getCoursesWithAuthorsDetailQuery = new GetCoursesWithAuthorsDetailQuery();
-        IEnumerable<CourseForGetCoursesWithAuthorsDetailDto?> coursesToReturn = await _mediator.Send(getCoursesWithAuthorsDetailQuery);
+        GetPublishersWithCoursesDetailQuery getPublishersWithCoursesDetailQuery = new GetPublishersWithCoursesDetailQuery();
+        IEnumerable<PublisherForGetPublishersWithCoursesDetailDto?> publishersToReturn = await _mediator.Send(getPublishersWithCoursesDetailQuery);
 
-        return Ok(coursesToReturn);
+        if (publishersToReturn == null) return NotFound();
+
+        return Ok(publishersToReturn);
     }
 
-    [HttpGet("with-authors/{id}", Name = "GetCourseWithAuthorsById")]
-    public async Task<ActionResult<CourseForGetCourseWithAuthorsDetailDto>> GetCourseWithAuthorsByIdAsync(int id)
+    [HttpGet("with-courses/{id}", Name = "GetPublisherWithCoursesById")]
+    public async Task<ActionResult<PublisherForGetPublisherWithCoursesDetailDto>> GetPublisherWithCoursesByIdAsync(int id)
     {
-        GetCourseWithAuthorsDetailQuery getCourseDetailQuery = new GetCourseWithAuthorsDetailQuery {Id = id};
-        CourseForGetCourseWithAuthorsDetailDto? courseToReturn = await _mediator.Send(getCourseDetailQuery);
+        GetPublisherWithCoursesDetailQuery getPublisherWithCoursesDetailQuery = new GetPublisherWithCoursesDetailQuery{Id = id};
+        PublisherForGetPublisherWithCoursesDetailDto? publisherToReturn = await _mediator.Send(getPublisherWithCoursesDetailQuery);
 
-        if (courseToReturn == null) return NotFound();
+        if (publisherToReturn == null) return NotFound();
 
-        return Ok(courseToReturn);
+        return Ok(publisherToReturn);
     }
-    */
 
     [HttpPost]
     public async Task<ActionResult<CreatePublisherDto>> CreatePublisherAsync(CreatePublisherCommand createPublisherCommand) {

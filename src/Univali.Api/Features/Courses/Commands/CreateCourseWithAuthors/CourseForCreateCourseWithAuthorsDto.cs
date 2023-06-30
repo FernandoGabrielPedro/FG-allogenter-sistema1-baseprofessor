@@ -5,5 +5,6 @@ public class CourseForCreateCourseWithAuthorsDto{
     public string Title {get; set;} = string.Empty;
     public string Description {get; set;} = string.Empty;
     public double Price {get; set;}
+    public int PublisherId {get; set;}
     public List<AuthorForCreateCourseWithAuthorsDto> Authors {get; set;} = new();
 }

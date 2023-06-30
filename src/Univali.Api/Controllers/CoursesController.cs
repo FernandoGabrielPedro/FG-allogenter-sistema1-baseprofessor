@@ -25,6 +25,7 @@ public class CoursesController : MainController {
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
     }
 
+    /*
     [HttpGet]
     public async Task<ActionResult<IEnumerable<GetCoursesDetailDto>>> GetCoursesAsync()
     {
@@ -44,20 +45,21 @@ public class CoursesController : MainController {
 
         return Ok(courseToReturn);
     }
+    */
 
     [HttpGet("with-authors")]
-    public async Task<ActionResult<IEnumerable<CourseForGetCoursesWithAuthorsDetailDto>>> GetCoursesWithAuthorsAsync()
+    public async Task<ActionResult<IEnumerable<CourseForGetCoursesWithAuthorsDetailDto>>> GetCoursesWithAuthorsAsync(int publisherId)
     {
-        GetCoursesWithAuthorsDetailQuery getCoursesWithAuthorsDetailQuery = new GetCoursesWithAuthorsDetailQuery();
+        GetCoursesWithAuthorsDetailQuery getCoursesWithAuthorsDetailQuery = new GetCoursesWithAuthorsDetailQuery{PublisherId = publisherId};
         IEnumerable<CourseForGetCoursesWithAuthorsDetailDto?> coursesToReturn = await _mediator.Send(getCoursesWithAuthorsDetailQuery);
 
         return Ok(coursesToReturn);
     }
 
-    [HttpGet("with-authors/{id}", Name = "GetCourseWithAuthorsById")]
-    public async Task<ActionResult<CourseForGetCourseWithAuthorsDetailDto>> GetCourseWithAuthorsByIdAsync(int id)
+    [HttpGet("with-authors/{courseId}", Name = "GetCourseWithAuthorsById")]
+    public async Task<ActionResult<CourseForGetCourseWithAuthorsDetailDto>> GetCourseWithAuthorsByIdAsync(int publisherId, int courseId)
     {
-        GetCourseWithAuthorsDetailQuery getCourseDetailQuery = new GetCourseWithAuthorsDetailQuery {Id = id};
+        GetCourseWithAuthorsDetailQuery getCourseDetailQuery = new GetCourseWithAuthorsDetailQuery {CourseId = courseId, PublisherId = publisherId};
         CourseForGetCourseWithAuthorsDetailDto? courseToReturn = await _mediator.Send(getCourseDetailQuery);
 
         if (courseToReturn == null) return NotFound();
@@ -65,7 +67,7 @@ public class CoursesController : MainController {
         return Ok(courseToReturn);
     }
 
-    [HttpPost]
+    /*[HttpPost]
     public async Task<ActionResult<CreateCourseDto>> CreateCourseAsync(CreateCourseCommand createCourseCommand) {
 
         CreateCourseDto courseToReturn = await _mediator.Send(createCourseCommand);
@@ -76,18 +78,21 @@ public class CoursesController : MainController {
             new { id = courseToReturn.Id },
             courseToReturn
         );
-    }
-
+    }*/
     
     [HttpPost("with-authors")]
-    public async Task<ActionResult<CourseForCreateCourseWithAuthorsDto>> CreateCourseWithAuthorsAsync(CreateCourseWithAuthorsCommand createCourseWithAuthorsCommand) {
+    public async Task<ActionResult<CourseForCreateCourseWithAuthorsDto>> CreateCourseWithAuthorsAsync(int publisherId, CreateCourseWithAuthorsCommand createCourseWithAuthorsCommand) {
+        var publisher = await _publisherRepository.GetPublisherByIdAsync(publisherId);
+        if(publisher == null) return BadRequest();
+
+        createCourseWithAuthorsCommand.publisherId = publisherId;
 
         CourseForCreateCourseWithAuthorsDto courseToReturn = await _mediator.Send(createCourseWithAuthorsCommand);
         
         return CreatedAtRoute
         (
             "GetCourseWithAuthorsById",
-            new { id = courseToReturn.Id },
+            new { courseId = courseToReturn.Id, publisherId = courseToReturn.PublisherId},
             courseToReturn
         );
     }

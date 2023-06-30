@@ -17,7 +17,8 @@ public class GetCourseWithAuthorsDetailQueryHandler : IRequestHandler<GetCourseW
 
     public async Task<CourseForGetCourseWithAuthorsDetailDto> Handle(GetCourseWithAuthorsDetailQuery request, CancellationToken cancellationToken)
     {
-        Course? courseFromDatabase = await _publisherRepository.GetCourseWithAuthorsByIdAsync(request.Id);
+        var publisher = await _publisherRepository.GetPublisherByIdAsync(request.PublisherId);
+        var courseFromDatabase = publisher?.Courses.FirstOrDefault(c => c.Id == request.CourseId);
         return _mapper.Map<CourseForGetCourseWithAuthorsDetailDto>(courseFromDatabase);
     }
 }

@@ -65,8 +65,20 @@ public class PublisherRepository : IPublisherRepository {
     public async Task<IEnumerable<Publisher>> GetPublishersAsync() {
         return await _context.Publishers.OrderBy(c => c.Id).ToListAsync();
     }
+    public async Task<IEnumerable<Publisher>> GetPublishersWithCoursesAsync() {
+        return await _context.Publishers.Include(p => p.Courses).OrderBy(c => c.Id).ToListAsync();
+    }
+    public async Task<IEnumerable<Publisher>> GetPublishersWithCoursesWithAuthorsAsync() {
+        return await _context.Publishers.Include(p => p.Courses).ThenInclude(c => c.Authors).OrderBy(c => c.Id).ToListAsync();
+    }
     public async Task<Publisher?> GetPublisherByIdAsync(int id) {
         return await _context.Publishers.FirstOrDefaultAsync(p => p.Id == id);
+    }
+    public async Task<Publisher?> GetPublisherWithCoursesByIdAsync(int id) {
+        return await _context.Publishers.Include(p => p.Courses).FirstOrDefaultAsync(p => p.Id == id);
+    }
+    public async Task<Publisher?> GetPublisherWithCoursesWithAuthorsByIdAsync(int id) {
+        return await _context.Publishers.Include(p => p.Courses).ThenInclude(c => c.Authors).FirstOrDefaultAsync(p => p.Id == id);
     }
     public void CreatePublisher(Publisher publisherEntity) {
         _context.Publishers.Add(publisherEntity);

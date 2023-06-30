@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -6,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Univali.Api.Migrations.Publisher
 {
     /// <inheritdoc />
-    public partial class NewContextPublisher : Migration
+    public partial class PublisherMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,22 +27,7 @@ namespace Univali.Api.Migrations.Publisher
                 });
 
             migrationBuilder.CreateTable(
-                name: "Courses",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Title = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    BasePrice = table.Column<double>(type: "double precision", precision: 5, scale: 2, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Courses", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Pulishers",
+                name: "Publishers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -52,53 +38,81 @@ namespace Univali.Api.Migrations.Publisher
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Pulishers", x => x.Id);
+                    table.PrimaryKey("PK_Publishers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AuthorCourse",
+                name: "Courses",
                 columns: table => new
                 {
-                    AuthorsId = table.Column<int>(type: "integer", nullable: false),
-                    CoursesId = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    BasePrice = table.Column<double>(type: "double precision", precision: 5, scale: 2, nullable: false),
+                    PublisherId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AuthorCourse", x => new { x.AuthorsId, x.CoursesId });
+                    table.PrimaryKey("PK_Courses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AuthorCourse_Authors_AuthorsId",
-                        column: x => x.AuthorsId,
+                        name: "FK_Courses_Publishers_PublisherId",
+                        column: x => x.PublisherId,
+                        principalTable: "Publishers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AuthorsCourses",
+                columns: table => new
+                {
+                    AuthorId = table.Column<int>(type: "integer", nullable: false),
+                    CourseId = table.Column<int>(type: "integer", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AuthorsCourses", x => new { x.AuthorId, x.CourseId });
+                    table.ForeignKey(
+                        name: "FK_AuthorsCourses_Authors_AuthorId",
+                        column: x => x.AuthorId,
                         principalTable: "Authors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AuthorCourse_Courses_CoursesId",
-                        column: x => x.CoursesId,
+                        name: "FK_AuthorsCourses_Courses_CourseId",
+                        column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AuthorCourse_CoursesId",
-                table: "AuthorCourse",
-                column: "CoursesId");
+                name: "IX_AuthorsCourses_CourseId",
+                table: "AuthorsCourses",
+                column: "CourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Courses_PublisherId",
+                table: "Courses",
+                column: "PublisherId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AuthorCourse");
-
-            migrationBuilder.DropTable(
-                name: "Pulishers");
+                name: "AuthorsCourses");
 
             migrationBuilder.DropTable(
                 name: "Authors");
 
             migrationBuilder.DropTable(
                 name: "Courses");
+
+            migrationBuilder.DropTable(
+                name: "Publishers");
         }
     }
 }

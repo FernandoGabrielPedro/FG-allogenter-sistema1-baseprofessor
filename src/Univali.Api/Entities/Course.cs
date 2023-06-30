@@ -6,6 +6,7 @@ public class Course {
     public string Description {get; set;} = string.Empty;
     public double Price {get; set;}
     public Publisher Publisher {get; set;} = new();
+    public int PublisherId {get; set;}
     public List<Author> Authors {get; set;} = new();
 
     public Course(string title, string description, double price)

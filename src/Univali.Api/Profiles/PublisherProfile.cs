@@ -9,6 +9,11 @@ public class PublisherProfile : Profile {
 
         CreateMap<Entities.Publisher, Entities.Publisher>();
 
+        CreateMap<Entities.Publisher, Univali.Api.Features.Publishers.Queries.GetPublishersDetail.GetPublishersDetailDto>();
+        CreateMap<Entities.Publisher, Univali.Api.Features.Publishers.Queries.GetPublisherDetail.GetPublisherDetailDto>();
+        CreateMap<Entities.Publisher, Univali.Api.Features.Publishers.Queries.GetPublishersWithCoursesDetail.PublisherForGetPublishersWithCoursesDetailDto>();
+        CreateMap<Entities.Publisher, Univali.Api.Features.Publishers.Queries.GetPublisherWithCoursesDetail.PublisherForGetPublisherWithCoursesDetailDto>();
+
         CreateMap<Univali.Api.Features.Publishers.Commands.CreatePublisher.CreatePublisherCommand, Entities.Publisher>();
         CreateMap<Entities.Publisher, Univali.Api.Features.Publishers.Commands.CreatePublisher.CreatePublisherDto>();
         CreateMap<Univali.Api.Features.Publishers.Commands.UpdatePublisher.UpdatePublisherCommand, Entities.Publisher>();
