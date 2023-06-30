@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "3bd3045b-0014-468d-aecb-9935b135b3d6",
+		"_postman_id": "f181518b-1447-4ad1-9e13-ed04ad85fc18",
 		"name": "AllogSistema1 - Base Professor",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "27562360"
@@ -447,53 +447,12 @@
 			"name": "Courses",
 			"item": [
 				{
-					"name": "Get Courses",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:{{port}}/api/courses",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "{{port}}",
-							"path": [
-								"api",
-								"courses"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Course By Id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:{{port}}/api/courses/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "{{port}}",
-							"path": [
-								"api",
-								"courses",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Get Courses With Authors",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:{{port}}/api/courses/with-authors/",
+							"raw": "http://localhost:{{port}}/api/publishers/1/courses/with-authors/",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -501,6 +460,8 @@
 							"port": "{{port}}",
 							"path": [
 								"api",
+								"publishers",
+								"1",
 								"courses",
 								"with-authors",
 								""
@@ -515,7 +476,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:{{port}}/api/courses/with-authors/1",
+							"raw": "http://localhost:{{port}}/api/publishers/1/courses/with-authors/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -523,38 +484,11 @@
 							"port": "{{port}}",
 							"path": [
 								"api",
+								"publishers",
+								"1",
 								"courses",
 								"with-authors",
 								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Post Course",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"title\":\"Title\",\r\n    \"description\":\"Description\",\r\n    \"Price\":\"110.99\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:{{port}}/api/courses",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "{{port}}",
-							"path": [
-								"api",
-								"courses"
 							]
 						}
 					},
@@ -567,7 +501,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\":\"Title\",\r\n    \"description\":\"Description\",\r\n    \"price\":\"110.99\",\r\n    \"authorsidsforcreation\":[\r\n        {\r\n            \"authorid\":\"1\"\r\n        },\r\n        {\r\n            \"authorid\":\"2\"\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"title\":\"Curso 1\",\r\n    \"description\":\"Description\",\r\n    \"price\":\"110.99\",\r\n    \"authorsidsforcreation\":[\r\n        {\r\n            \"authorid\":\"1\"\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -575,7 +509,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:{{port}}/api/courses/with-authors",
+							"raw": "http://localhost:{{port}}/api/publishers/1/courses/with-authors",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -583,6 +517,8 @@
 							"port": "{{port}}",
 							"path": [
 								"api",
+								"publishers",
+								"1",
 								"courses",
 								"with-authors"
 							]
@@ -805,6 +741,177 @@
 							"path": [
 								"api",
 								"authors",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Publishers",
+			"item": [
+				{
+					"name": "Get Publishers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{port}}/api/publishers/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"publishers",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Publisher By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{port}}/api/publishers/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"publishers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Publishers With Courses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{port}}/api/publishers/with-courses/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"publishers",
+								"with-courses",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Publishers With Courses By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{port}}/api/publishers/with-courses/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"publishers",
+								"with-courses",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post Publisher",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\":\"Joãozinho\",\r\n    \"lastname\":\"Pereira\",\r\n    \"cpf\":\"12312312312\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/publishers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"publishers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Publisher",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":\"1\",\r\n    \"firstname\":\"Pedrinho\",\r\n    \"lastname\":\"Jóia\",\r\n    \"cpf\":\"12312312312\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/publishers/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"publishers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Publisher",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{port}}/api/publishers/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"publishers",
 								"1"
 							]
 						}
