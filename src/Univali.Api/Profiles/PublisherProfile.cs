@@ -8,5 +8,9 @@ public class PublisherProfile : Profile {
         //2º arg: objeto de destino
 
         CreateMap<Entities.Publisher, Entities.Publisher>();
+
+        CreateMap<Univali.Api.Features.Publishers.Commands.CreatePublisher.CreatePublisherCommand, Entities.Publisher>();
+        CreateMap<Entities.Publisher, Univali.Api.Features.Publishers.Commands.CreatePublisher.CreatePublisherDto>();
+        CreateMap<Univali.Api.Features.Publishers.Commands.UpdatePublisher.UpdatePublisherCommand, Entities.Publisher>();
     }
 }

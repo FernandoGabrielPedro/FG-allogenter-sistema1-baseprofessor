@@ -1,6 +1,7 @@
 using AutoMapper;
 using Univali.Api.Repositories;
 using MediatR;
+using Univali.Api.Entities;
 
 namespace Univali.Api.Features.Courses.Commands.DeleteCourse;
 
@@ -16,12 +17,12 @@ public class DeleteCourseCommandHandler : IRequestHandler<DeleteCourseCommand, b
 
     public async Task<bool> Handle(DeleteCourseCommand request, CancellationToken cancellationToken)
     {
-        var course = await _publisherRepository.GetCourseByIdAsync(request.Id);
-        if(course == null) return false;
+        Publisher? publisherEntity = await _publisherRepository.GetPublisherByIdAsync(request.PublisherId);
+        Course? courseEntity = publisherEntity?.Courses.FirstOrDefault(c => c.Id == request.CourseId);
+        if(courseEntity == null) return false;
         
-        _publisherRepository.DeleteCourse(course);
+        publisherEntity?.Courses.Remove(courseEntity);
         await _publisherRepository.SaveChangesAsync();
         return true;
-
     }
 }

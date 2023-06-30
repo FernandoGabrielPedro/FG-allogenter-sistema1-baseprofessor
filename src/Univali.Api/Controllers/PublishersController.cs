@@ -2,29 +2,25 @@ using Univali.Api.Repositories;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Univali.Api.Features.Courses.Commands.CreateCourse;
-using Univali.Api.Features.Courses.Commands.DeleteCourse;
-using Univali.Api.Features.Courses.Commands.UpdateCourse;
-using Univali.Api.Features.Courses.Queries.GetCourseDetail;
-using Univali.Api.Features.Courses.Queries.GetCoursesDetail;
-using Univali.Api.Features.Courses.Queries.GetCoursesWithAuthorsDetail;
-using Univali.Api.Features.Courses.Queries.GetCourseWithAuthorsDetail;
-using Univali.Api.Features.Courses.Commands.CreateCourseWithAuthors;
+using Univali.Api.Features.Publishers.Commands.CreatePublisher;
+using Univali.Api.Features.Publishers.Commands.UpdatePublisher;
+using Univali.Api.Features.Publishers.Commands.DeletePublisher;
 
 namespace Univali.Api.Controllers;
 
 [ApiController]
-[Route("api/publishers/{publisherId}/courses")]
-public class CoursesController : MainController {
+[Route("api/publishers")]
+public class PublishersController : MainController {
     private readonly IMapper _mapper;
     private readonly IPublisherRepository _publisherRepository;
     private readonly IMediator _mediator;
-    public CoursesController (IMapper mapper, IPublisherRepository publisherRepository, IMediator mediator) {
+    public PublishersController (IMapper mapper, IPublisherRepository publisherRepository, IMediator mediator) {
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _publisherRepository = publisherRepository ?? throw new ArgumentNullException(nameof(publisherRepository));
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
     }
 
+    /*
     [HttpGet]
     public async Task<ActionResult<IEnumerable<GetCoursesDetailDto>>> GetCoursesAsync()
     {
@@ -64,51 +60,37 @@ public class CoursesController : MainController {
 
         return Ok(courseToReturn);
     }
+    */
 
     [HttpPost]
-    public async Task<ActionResult<CreateCourseDto>> CreateCourseAsync(CreateCourseCommand createCourseCommand) {
+    public async Task<ActionResult<CreatePublisherDto>> CreatePublisherAsync(CreatePublisherCommand createPublisherCommand) {
 
-        CreateCourseDto courseToReturn = await _mediator.Send(createCourseCommand);
+        CreatePublisherDto publisherToReturn = await _mediator.Send(createPublisherCommand);
         
         return CreatedAtRoute
         (
-            "GetCourseById",
-            new { id = courseToReturn.Id },
-            courseToReturn
+            "GetPublisherById",
+            new { id = publisherToReturn.Id },
+            publisherToReturn
         );
     }
 
-    
-    [HttpPost("with-authors")]
-    public async Task<ActionResult<CourseForCreateCourseWithAuthorsDto>> CreateCourseWithAuthorsAsync(CreateCourseWithAuthorsCommand createCourseWithAuthorsCommand) {
-
-        CourseForCreateCourseWithAuthorsDto courseToReturn = await _mediator.Send(createCourseWithAuthorsCommand);
-        
-        return CreatedAtRoute
-        (
-            "GetCourseWithAuthorsById",
-            new { id = courseToReturn.Id },
-            courseToReturn
-        );
-    }
-
-    [HttpPut("{courseId}")]
-    public async Task<ActionResult> UpdateCourseAsync(int publisherId, int courseId, CourseForUpdateCourseDto courseForUpdateCourseDto)
+    [HttpPut("{id}")]
+    public async Task<ActionResult> UpdatePublisherAsync(UpdatePublisherCommand updatePublisherCommand, int id)
     {
-        if (courseId != courseForUpdateCourseDto.Id) return BadRequest();
+        if (id != updatePublisherCommand.Id) return BadRequest();
 
-        UpdateCourseCommand updateCourseCommand= new UpdateCourseCommand {PublisherId = publisherId, CourseForUpdateCourseDto = courseForUpdateCourseDto};
-        bool result = await _mediator.Send(updateCourseCommand);
+        bool result = await _mediator.Send(updatePublisherCommand);
         if(!result) return NotFound();
 
         return NoContent();
     }
 
-    [HttpDelete("{courseId}")]
-    public async Task<ActionResult> DeleteCourseAsync(int publisherId, int courseId)
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeletePublisherAsync(int id)
     {
-        DeleteCourseCommand deleteCourseCommand = new DeleteCourseCommand {PublisherId = publisherId, CourseId = courseId};
-        bool result = await _mediator.Send(deleteCourseCommand);
+        DeletePublisherCommand deletePublisherCommand = new DeletePublisherCommand {Id = id};
+        bool result = await _mediator.Send(deletePublisherCommand);
         if(!result) return NotFound();
         return NoContent();
     }

@@ -18,11 +18,12 @@ public class UpdateCourseCommandHandler : IRequestHandler<UpdateCourseCommand, b
 
     public async Task<bool> Handle(UpdateCourseCommand request, CancellationToken cancellationToken)
     {
-        var courseForUpdate = _mapper.Map<Course>(request);
-        if(courseForUpdate == null) return false;
+        Publisher? publisherEntity = await _publisherRepository.GetPublisherByIdAsync(request.PublisherId);
+        Course? courseEntity = publisherEntity?.Courses.FirstOrDefault(c => c.Id == request.CourseForUpdateCourseDto?.Id);
+        if(courseEntity == null) return false;
 
-        var rightCourse = await _publisherRepository.GetCourseByIdAsync(request.Id);
-        _publisherRepository.UpdateCourse(courseForUpdate, rightCourse!);
+        Course newCourseValues = _mapper.Map<Course>(request.CourseForUpdateCourseDto);
+        _publisherRepository.UpdateCourse(courseEntity, newCourseValues);
         await _publisherRepository.SaveChangesAsync();
 
         return true;

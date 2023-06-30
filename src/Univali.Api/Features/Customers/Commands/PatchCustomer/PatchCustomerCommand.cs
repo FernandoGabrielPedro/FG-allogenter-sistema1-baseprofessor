@@ -8,6 +8,6 @@ namespace Univali.Api.Features.Customers.Commands.PatchCustomer;
 
 public class PatchCustomerCommand : IRequest<PatchCustomerReturnDto?>
 {
-    public JsonPatchDocument<PatchCustomerDto> PatchDocument {get; set;}
+    public JsonPatchDocument<PatchCustomerDto> PatchDocument {get; set;} = new();
     public int Id {get; set;}
 }
