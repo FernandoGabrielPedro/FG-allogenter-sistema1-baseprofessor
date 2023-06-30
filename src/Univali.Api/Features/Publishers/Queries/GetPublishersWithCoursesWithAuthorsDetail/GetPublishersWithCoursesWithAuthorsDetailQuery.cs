@@ -1,0 +1,5 @@
+using MediatR;
+
+namespace Univali.Api.Features.Publishers.Queries.GetPublishersWithCoursesWithAuthorsDetail;
+
+public class GetPublishersWithCoursesWithAuthorsDetailQuery : IRequest<IEnumerable<PublisherForGetPublishersWithCoursesWithAuthorsDetailDto>> {}

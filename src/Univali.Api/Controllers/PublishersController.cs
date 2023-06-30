@@ -9,6 +9,8 @@ using Univali.Api.Features.Publishers.Queries.GetPublisherDetail;
 using Univali.Api.Features.Publishers.Queries.GetPublishersDetail;
 using Univali.Api.Features.Publishers.Queries.GetPublishersWithCoursesDetail;
 using Univali.Api.Features.Publishers.Queries.GetPublisherWithCoursesDetail;
+using Univali.Api.Features.Publishers.Queries.GetPublishersWithCoursesWithAuthorsDetail;
+using Univali.Api.Features.Publishers.Queries.GetPublisherWithCoursesWithAuthorsDetail;
 
 namespace Univali.Api.Controllers;
 
@@ -62,6 +64,28 @@ public class PublishersController : MainController {
     {
         GetPublisherWithCoursesDetailQuery getPublisherWithCoursesDetailQuery = new GetPublisherWithCoursesDetailQuery{Id = id};
         PublisherForGetPublisherWithCoursesDetailDto? publisherToReturn = await _mediator.Send(getPublisherWithCoursesDetailQuery);
+
+        if (publisherToReturn == null) return NotFound();
+
+        return Ok(publisherToReturn);
+    }
+
+    [HttpGet("with-courses/with-authors")]
+    public async Task<ActionResult<IEnumerable<PublisherForGetPublishersWithCoursesWithAuthorsDetailDto>>> GetPublishersWithCoursesWithAuthorsAsync()
+    {
+        GetPublishersWithCoursesWithAuthorsDetailQuery getPublishersWithCoursesWithAuthorsDetailQuery = new GetPublishersWithCoursesWithAuthorsDetailQuery();
+        IEnumerable<PublisherForGetPublishersWithCoursesWithAuthorsDetailDto?> publishersToReturn = await _mediator.Send(getPublishersWithCoursesWithAuthorsDetailQuery);
+
+        if (publishersToReturn == null) return NotFound();
+
+        return Ok(publishersToReturn);
+    }
+
+    [HttpGet("with-courses/with-authors/{id}", Name = "GetPublisherWithCoursesWithAuthorsById")]
+    public async Task<ActionResult<PublisherForGetPublisherWithCoursesWithAuthorsDetailDto>> GetPublisherWithCoursesWithAuthorsByIdAsync(int id)
+    {
+        GetPublisherWithCoursesWithAuthorsDetailQuery getPublisherWithCoursesWithAuthorsDetailQuery = new GetPublisherWithCoursesWithAuthorsDetailQuery{Id = id};
+        PublisherForGetPublisherWithCoursesWithAuthorsDetailDto? publisherToReturn = await _mediator.Send(getPublisherWithCoursesWithAuthorsDetailQuery);
 
         if (publisherToReturn == null) return NotFound();
 

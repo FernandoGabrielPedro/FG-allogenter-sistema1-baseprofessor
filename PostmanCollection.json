@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f181518b-1447-4ad1-9e13-ed04ad85fc18",
+		"_postman_id": "96954432-6586-4d62-8c04-93282caff7ef",
 		"name": "AllogSistema1 - Base Professor",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "27562360"
@@ -674,7 +674,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstname\":\"Joãozinho\",\r\n    \"lastname\":\"Pereira\"\r\n}",
+							"raw": "{\r\n    \"firstname\":\"Pedrinho\",\r\n    \"lastname\":\"Júnior\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -833,6 +833,51 @@
 								"publishers",
 								"with-courses",
 								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Publishers With Courses With Authors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{port}}/api/publishers/with-courses/with-authors",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"publishers",
+								"with-courses",
+								"with-authors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Publishers With Courses With Authors By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{port}}/api/publishers/with-courses/with-authors/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"publishers",
+								"with-courses",
+								"with-authors",
+								"1"
 							]
 						}
 					},

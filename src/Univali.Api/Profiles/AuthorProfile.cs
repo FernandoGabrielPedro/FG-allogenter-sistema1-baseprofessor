@@ -23,5 +23,7 @@ public class AuthorProfile : Profile {
         CreateMap<Univali.Api.Features.Courses.Commands.CreateCourseWithAuthors.AuthorForCreateCourseWithAuthorsDto, Entities.Author>();
         CreateMap<Univali.Api.Features.Courses.Commands.CreateCourseWithAuthors.AuthorForCreateCourseWithAuthorsCommand, Entities.Author>();
         CreateMap<Entities.Author, Univali.Api.Features.Courses.Commands.CreateCourseWithAuthors.AuthorForCreateCourseWithAuthorsDto>();
+        CreateMap<Entities.Author, Univali.Api.Features.Publishers.Queries.GetPublishersWithCoursesWithAuthorsDetail.AuthorForGetPublishersWithCoursesWithAuthorsDetailDto>();
+        CreateMap<Entities.Author, Univali.Api.Features.Publishers.Queries.GetPublisherWithCoursesWithAuthorsDetail.AuthorForGetPublisherWithCoursesWithAuthorsDetailDto>();
     }
 }
